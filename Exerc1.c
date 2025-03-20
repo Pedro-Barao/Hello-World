@@ -23,9 +23,11 @@ int main()
     printf("\nOla! seja bem-indo ao site da (empresa generica)\n");
     printf("Precisamos que voce nos forneca algumas informacoes para identifica-lo(a)\n\n");
     printf("Qual o seu nome?: ");
-    scanf("%s", nome);
+    fflush(stdin);
+    fgets(nome, 50, stdin);
     printf("Qual o seu cargo?: ");
-    scanf("%s", cargo);
+    fflush(stdin);
+    fgets(cargo, 50, stdin);
     printf("Qual a sua idade?: ");
     scanf("%d", &idade);
     printf("Ola senhor(a) %s\n", nome);
@@ -34,10 +36,9 @@ int main()
 
     novo_salario_bruto = salario_bruto + (salario_bruto * 38/100);
     gratificacao = salario_bruto * 20/100;
-    desconto = (salario_bruto * 0.15) + gratificacao;
+    desconto = salario_bruto * 15/100;
     salario_final = novo_salario_bruto + gratificacao - desconto;
 
-    printf("Seu salario bruto era de = %.2f\n", salario_bruto);
     printf("Seu novo salario sera de = %.2f\n", novo_salario_bruto);
     printf("Sua gratificacao pelo seu trabalho arduo sera de = %.2f\n", gratificacao);
     printf("Seu desconto de imposotos sera de = %.2f\n\n", desconto);
