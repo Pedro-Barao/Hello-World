@@ -89,7 +89,7 @@ int main()
             salario_bruto = horas_trabalhadas * valor_hora_trabalhada + (1 * 13.48);
         } else{
 
-            salario_bruto = horas_trabalhadas * valor_hora_trabalhada;
+            salario_bruto = horas_trabalhadas * valor_hora_trabalhada * (dependentes * 13.48);
 
         }
     }
