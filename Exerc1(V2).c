@@ -28,7 +28,8 @@ int main()
     taxa_revendedor = preco_bruto * 0.28;
     preco_final = preco_bruto + impostos + taxa_revendedor;
 
-    printf("\nO automovel %s tem o preco de fabrica de = %.2f reais\n", nome_carro, preco_bruto);
+    printf("\nSeu carro e um %s", nome_carro);
+    printf("O automovel tem o preco de fabrica de = %.2f reais\n", preco_bruto);
     printf("E o preco final do carro e igual a = %.2f reais", preco_final);
 
     return 0;
