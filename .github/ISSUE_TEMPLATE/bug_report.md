@@ -17,6 +17,6 @@ A clear and concise description of what the bug is. (Uma descrição clara e con
 It´s goint to be easier if you say the name of the project. (Será mais fácil se você me disser o nome do projeto.)
 
 
-**Additional context**
+**Additional context (Contexto adicional)**
 
 Add any other context about the problem here. (Adicione algum outro contexto para o problema aqui.)
