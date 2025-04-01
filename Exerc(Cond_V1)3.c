@@ -40,4 +40,6 @@ int main()
     }
 
     printf("\nOs valores de A, B e Y sao respectivamente %.2f, %.2f e %.2f", A, B, Y);
+
+    return 0;
 }
