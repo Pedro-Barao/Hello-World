@@ -24,15 +24,10 @@ int main()
             resultado = resultado + numero;
         
         }
-        
-        if (numero == 500)
-        {
-
-        printf("\n%d", resultado);
-
-        }
    
     }
+
+    printf("\n%d", resultado);
 
     return 0;
 }
