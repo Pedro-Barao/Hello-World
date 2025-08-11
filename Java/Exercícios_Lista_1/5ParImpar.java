@@ -8,7 +8,7 @@ Objetivo: Aplicar condicionais
 
 import java.util.Scanner;
 
-public class Parímpar5 {
+public class 5ParImpar {
     
     public static void main(String[] args)
     {
@@ -34,3 +34,4 @@ public class Parímpar5 {
         }
     }
 }
+
