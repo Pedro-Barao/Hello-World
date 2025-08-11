@@ -5,7 +5,7 @@ Data: 08/08/2025
 Objetivo: Casting(mudança de variáveis)
  */
 
-public class Casting3 {
+public class 3Casting {
     
     public static void main(String[] args)
     {
@@ -82,3 +82,4 @@ public class Casting3 {
                 
     }
 }
+
