@@ -7,7 +7,7 @@ Objetivo: Contagem regressiva "Feliz ano novo"
  */
 
 
-public class ContagemRegressiva8 {
+public class 8ContagemRegressiva {
     
     public static void main(String[] args)
     {
@@ -25,3 +25,4 @@ public class ContagemRegressiva8 {
         System.out.println("\nFeliz Ano Novo!");
     }
 }
+
