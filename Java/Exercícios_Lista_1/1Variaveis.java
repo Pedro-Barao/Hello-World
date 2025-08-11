@@ -7,7 +7,7 @@ Objetivo: Compreender variáveis
 */
 
 
-public class Variaveis1 {
+public class 1Variaveis {
     
     public static void main (String[] args){
     
@@ -31,3 +31,4 @@ public class Variaveis1 {
     System.out.println(nome);
  }
 }
+
