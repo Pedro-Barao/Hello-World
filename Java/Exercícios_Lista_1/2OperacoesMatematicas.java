@@ -6,7 +6,7 @@ Objetivo: Operações matemáticas envolvendo variáveis
 
  */
 
-public class OperaçõesMatemáticas {
+public class 2OperacoesMatematicas {
     
     public static void main(String[] args)
     {
@@ -28,3 +28,4 @@ public class OperaçõesMatemáticas {
     }
     
 }
+
