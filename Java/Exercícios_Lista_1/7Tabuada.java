@@ -5,7 +5,7 @@
 
 import java.util.Scanner;
 
-public class Tabuada7 {
+public class 7Tabuada {
     
     public static void main(String[] args)
     {
@@ -32,3 +32,4 @@ public class Tabuada7 {
     }
     
 }
+
