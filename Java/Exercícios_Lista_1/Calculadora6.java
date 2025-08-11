@@ -8,7 +8,7 @@ Objetivo: Fazer uma calculadora
 
 import java.util.Scanner;
 
-public class Calculadora6 {
+public class 6Calculadora {
     
     public static void main(String[] args)
     {
@@ -65,3 +65,4 @@ public class Calculadora6 {
         }
     }
 }
+
