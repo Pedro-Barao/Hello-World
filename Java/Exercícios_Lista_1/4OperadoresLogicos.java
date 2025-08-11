@@ -6,7 +6,7 @@ Objetivo: Praticar operadores lógico
 
  */
 
-public class 4OperadoresLógicos {
+public class 4OperadoresLogicos {
     
     public static void main(String[] arg)
     {
@@ -83,4 +83,5 @@ public class 4OperadoresLógicos {
     }
             
 }
+
 
