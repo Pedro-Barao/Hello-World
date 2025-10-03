@@ -1,0 +1,96 @@
+/* base global */
+.root {
+  -fx-font-family: Verdana;
+  -fx-accent: #3d5afe;              /* cor de acento (barra de progresso, etc.) */
+  -fx-focus-color: #3d5afe;
+  -fx-faint-focus-color: rgba(61,90,254,0.28);
+}
+
+/* DISPLAY – cor do texto do TextField */
+.text-field.display {
+  -fx-text-fill: #ffffff;           /* COR DA FONTE DO CAMPO DE TEXTO */
+  -fx-prompt-text-fill: #b0b8c4;    /* se usar placeholder */
+  -fx-highlight-fill: rgba(255,255,255,0.20);
+  -fx-highlight-text-fill: #000000;
+  -fx-alignment: center-right;
+}
+
+/* BOTÕES – estilo base */
+.button {
+  -fx-background-color: #2f4f4f;
+  -fx-text-fill: #e2e8f0;
+  -fx-background-radius: 10;
+  -fx-border-radius: 10;
+  -fx-border-color: #191970;
+  -fx-padding: 8 14 8 14;
+  -fx-cursor: hand;
+}
+
+/* feedback visual */
+.button:hover {                      /* mouse por cima */
+  -fx-background-color: #355e5e;
+}
+.button:armed {                      /* clique/pressionado */
+  -fx-background-color: #223b3b;
+  -fx-translate-y: 1;
+  -fx-scale-x: 0.99;
+  -fx-scale-y: 0.99;
+}
+.button:focused {                    /* foco por teclado */
+  -fx-effect: dropshadow(three-pass-box, rgba(61,90,254,0.6), 10, 0, 0, 0);
+}
+.button:disabled {
+  -fx-opacity: .55;
+  -fx-effect: none;
+}
+
+
+.button.op {                         /* + - * / */
+  -fx-background-color: #27408b;
+  -fx-border-color: #436eee;
+  -fx-text-fill: #d9d9d9;
+}
+.button.op:hover {  -fx-background-color: #3050ad; }
+.button.op:armed {  -fx-background-color: #1f3572; }
+
+.button.action--ce {                 /* CE */
+  -fx-background-color: #ff8c00;
+  -fx-border-color: #ffa500;
+  -fx-text-fill: #1b1200;
+}
+.button.action--ce:hover 
+{ 
+    -fx-background-color: #ffa226; 
+}
+.button.action--ce:armed 
+{ 
+    -fx-background-color: #d97706; 
+}
+
+.button.action--c {                  /* C */
+  -fx-background-color: #ee3b3b;
+  -fx-border-color: #ff4040;
+  -fx-text-fill: #610000;
+}
+.button.action--c:hover 
+{ 
+    -fx-background-color: #f35a5a; 
+}
+.button.action--c:armed 
+{ 
+    -fx-background-color: #dc2626; 
+}
+
+.button.equals {                     /* = ocupando 2 colunas */
+  -fx-background-color: #436eee;
+  -fx-border-color: #27408b;
+  -fx-text-fill: white;
+}
+.button.equals:hover 
+{ 
+    -fx-background-color: #5a7cff; 
+}
+.button.equals:armed 
+{ 
+    -fx-background-color: #375ce0; 
+}
