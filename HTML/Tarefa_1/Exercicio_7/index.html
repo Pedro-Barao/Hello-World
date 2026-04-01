@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel = "stylesheet" href = "style.css">
+    <script>
+        function mudarcor()
+        {
+            
+            const texto = document.getElementById("texto");
+            texto.classList.toggle("mudarcor");
+
+        }
+    </script>
+</head>
+<body>
+    <div class = "container">
+
+        <form method = "post">
+
+            <h1>
+
+                Página de Login
+
+            </h1>
+            <br>
+
+            <label class = "nome">Nome:</label><br>
+            <input type = "text" name = "nome"><br>
+
+            <label class = "idade">Senha:</label><br>
+            <input type = "text" name = "idade"><br>
+
+            <button type = "button" onclick = "mudarcor()">
+                Enviar
+            </button>
+
+            <b id = "texto" class = "texto">
+                Sucesso no Login!
+            </b>
+
+        </form>
+    </div>
+</body>
+</html>

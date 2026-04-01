@@ -1,0 +1,46 @@
+* {
+
+    padding: 0;
+    margin: 0;
+
+}
+
+body {
+
+    height: 100vh;
+    background-color: #6495ED;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('https://images.vexels.com/media/users/3/145132/isolated/preview/d07fde1113977b1c898c8b7e83f15bf8-iacute-cone-de-raios-de-sol-m-eacute-dios-by-vexels.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+}
+
+.container{
+
+    border: 40px solid #DAA520;
+    border-radius: 60%;
+    background-color: #DAA520;
+
+}
+
+.container1{
+
+    padding: 15vh;
+    padding-top: 30%;
+    padding-bottom: 30%;
+    border: 40px solid #FFD700;
+    border-radius: 60%;
+
+}
+
+h1 {
+
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 300pt;
+    color: black;
+    
+}
