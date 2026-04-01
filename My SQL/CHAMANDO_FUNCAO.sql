@@ -1,0 +1,1 @@
+SELECT Titulo, preco_com_margem(Preco) FROM livraria_bairro.livro;
