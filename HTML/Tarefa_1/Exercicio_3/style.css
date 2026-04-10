@@ -7,21 +7,10 @@
 
 body {
 
-    background: linear-gradient(to right, rgb(202, 202, 202), rgb(146, 146, 146));
+    background: linear-gradient(to right, rgb(0, 0, 0), rgb(0, 0, 0));
     display: flex;
     flex-direction: column;
     height: auto;
-
-}
-
-h1 {
-
-    font-size: 30px;
-    margin-top: 20px;
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-bottom: 20px;
-    text-align: left;
 
 }
 
@@ -48,16 +37,9 @@ p {
 
 }
 
-li {
-
-    font-size: 20px;
-    margin-left: 10%;
-
-}
-
 .informacoes {
 
-    background: #d9d9d9;
+    background: #0f0f0f;
     width: 100%;
     height: 7%;
 
@@ -65,7 +47,7 @@ li {
 
 .texto {
 
-    background: #f5f5f5;
+    background: #000000;
     width: 100%;
     height: 7%;
 
@@ -74,7 +56,64 @@ li {
 img {
 
     width: 100%;
-    height: 7%;
+    height: auto;
+    margin-top: 20px;
+
+}
+
+.exercicios {
+
+    font-family: 'Cascadia Mono', monospace;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    color: #ffffff;
+    
+}
+
+#primeiro_exercicio
+{
+
+    font-family: 'Cascadia Mono', monospace;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    color: #ffffff;
+
+}
+
+#id_titulo1 {
+
+    font-family: 'Fira Code', monospace;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    font-size: 30px;
+    color: rgb(0, 128, 49);
+
+}
+
+#primeiro_texto {
+
+    display: flex;
+    justify-content: center;
+    font-family: 'Fira Code', monospace;
+    font-size: 20px;
+    margin: 10%;
+    margin-top: 100px;
+    color: rgb(26, 177, 84);
+
+}
+
+.p_texto {
+
+    display: flex;
+    justify-content: center;
+    font-family: 'Fira Code', monospace;
+    font-size: 20px;
+    margin: 10%;
+    margin-top: 200px;
+    color: rgb(26, 177, 84);
 
 }
 
@@ -88,14 +127,20 @@ img {
 
     img{
 
-        width: 95%;
+        display: flex;
+        justify-content: center;
+        width: 90%;
         height: 30%;
+        margin-left: 5%;
+        margin-bottom: 45px;
+        border-radius: 100px;
         
     }
 
     .texto {
 
         width: 70%;
+        height: auto;
 
     }
 
@@ -104,8 +149,8 @@ img {
         width: 30%;
 
     }
-
-    h1 {
+    
+    #id_titulo1 {
 
         font-size: 25px;
 
@@ -117,11 +162,34 @@ img {
 
     }
 
-    p {
+    #p_texto {
 
-        font-size: 15px;
+        display: block;
+        margin-left: 100px;
+        margin-right: 100px;
+        margin-top: 295px;
 
     }
 
+    #primeiro_texto {
+
+        margin-left: 100px;
+        margin-right: 100px;
+        margin-top: 340px;
+
+    }
+
+    #exercicios {
+
+        margin-top: 150px;
+
+    }
+
+    #primeiro_exercicio {
+
+        margin-top: 300px;
+        margin-bottom: 25px;
+
+    }
 
 }

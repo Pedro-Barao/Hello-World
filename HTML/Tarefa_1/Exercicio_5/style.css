@@ -7,7 +7,7 @@
 
 body {
 
-    background-color: rgb(199, 168, 211);
+    background-color: #3A405A;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,9 +17,9 @@ body {
 
 .container {
 
-    background-color: rgb(145, 140, 224);
+    background-color: #7483A3;
     border-radius: 10px;
-    box-shadow: 5px 5px 3px 5px rgb(94, 102, 170);
+    box-shadow: 5px 5px 3px 5px #1E212E;
     width: 700px;
     height: 550px;
     display: flex;
@@ -33,10 +33,11 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Times New Roman', Times, serif;
     margin-left: 25%;
     margin-bottom: 10%;
-    background-color: rgb(178, 45, 255);
-    box-shadow: 5px 5px 3px 5px rgb(76, 66, 80);
+    background-color: #83BDC9;
+    box-shadow: 5px 5px 3px 5px #242836;
     border-radius: 10px;
     width: 300px;
     height: 100px;
@@ -46,7 +47,22 @@ h1 {
 input {
 
     width: 250px;
-    height: 25px;
+    height: 30px;
+    border-radius: 15px;
+    padding: 5px;
+
+}
+
+.pergunta {
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+
+}
+
+input::placeholder {
+
+    font-style: italic;
 
 }
 
@@ -107,7 +123,8 @@ input {
 
     input {
 
-        width: 100%;
+        width: 95%;
+        padding: 5px;
 
     }
 
