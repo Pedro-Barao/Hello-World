@@ -1,0 +1,134 @@
+/* ═══════════════════════════════════════════════════════════════
+   EX02-ASTRONAUTA — Cmdr. Valentina Cruz — Perfil Espacial
+   Arquivo: style.css
+   Exercícios HTML & CSS — Desenvolvimento Web
+   ═══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    img { max-width: 100%; display: block; }
+
+    :root {
+      --space:  #050d1a;
+      --deep:   #0a1628;
+      --cyan:   #00e5cc;
+      --cyan2:  #00b8a4;
+      --steel:  #8eaabf;
+      --white:  #e8f4f8;
+    }
+
+    body { font-family: 'Exo 2', sans-serif; background: var(--space); color: var(--white); min-height: 100svh; }
+
+    /* NAV */
+    .nav {
+      background: rgba(5,13,26,.95); padding: 1rem 1.2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: .8rem;
+      border-bottom: 1px solid rgba(0,229,204,.1);
+    }
+    .nav-logo { font-family: 'Share Tech Mono', monospace; font-size: .8rem; color: var(--cyan); letter-spacing: .15em; }
+    .nav-badge { font-size: .55rem; letter-spacing: .15em; text-transform: uppercase; border: 1px solid rgba(0,229,204,.2); color: rgba(142,170,191,.5); padding: .3rem .6rem; }
+
+    /* LAYOUT PRINCIPAL */
+    .profile-wrapper {
+      max-width: 1000px; margin: 0 auto;
+      padding: 2rem 1.2rem 4rem;
+      display: grid; grid-template-columns: 320px 1fr; gap: 3.5rem; align-items: start;
+    }
+
+    /* ── COLUNA ESQUERDA ── */
+    .profile-left { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+
+    /* Círculo com borda animada */
+    .avatar-wrap {
+      position: relative; width: 240px; height: 240px;
+    }
+    .avatar-ring {
+      position: absolute; inset: -8px;
+      border: 2px solid transparent;
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin 4s linear infinite;
+    }
+
+    /* TAG OBRIGATÓRIA: <img> — PROPRIEDADE OBRIGATÓRIA: border-radius */
+    .avatar-wrap img {
+      width: 240px; height: 240px;
+      object-fit: cover; object-position: top;
+      /* PROPRIEDADE OBRIGATÓRIA: border-radius */
+      border-radius: 50%;
+      border: 3px solid rgba(0,229,204,.4);
+      filter: saturate(.8);
+    }
+
+    .status-pill {
+      display: flex; align-items: center; gap: .6rem;
+      border: 1px solid rgba(0,229,204,.25); padding: .45rem 1rem;
+      font-family: 'Share Tech Mono', monospace; font-size: .7rem; color: var(--cyan);
+    }
+    .s-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse 2s ease-in-out infinite; }
+
+    .mission-card {
+      width: 100%; background: rgba(10,22,40,.8);
+      border: 1px solid rgba(0,229,204,.15); padding: 1.3rem;
+    }
+    .mc-label { font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--steel); margin-bottom: .5rem; }
+    .mc-value { font-family: 'Share Tech Mono', monospace; font-size: .8rem; color: var(--cyan); margin-bottom: .3rem; }
+
+    .stats-2col { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; width: 100%; }
+    .stat-box {
+      background: rgba(0,229,204,.05); border: 1px solid rgba(0,229,204,.15);
+      border-radius: 4px; padding: .9rem; text-align: center;
+    }
+    .stat-n { font-size: 1.6rem; font-weight: 700; color: var(--cyan); display: block; line-height: 1; }
+    .stat-l { font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--steel); margin-top: .3rem; }
+
+    /* ── COLUNA DIREITA ── */
+    .rank-label {
+      font-family: 'Share Tech Mono', monospace; font-size: .68rem;
+      letter-spacing: .2em; text-transform: uppercase; color: var(--cyan);
+      margin-bottom: .6rem;
+    }
+    .profile-name { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1; margin-bottom: .3rem; }
+    .profile-title { font-size: .9rem; font-weight: 100; color: var(--steel); margin-bottom: 2rem; letter-spacing: .08em; }
+
+    .bio { font-size: .88rem; font-weight: 300; line-height: 1.85; color: rgba(232,244,248,.75); margin-bottom: 2rem; }
+
+    .skills-title { font-family: 'Share Tech Mono', monospace; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--steel); margin-bottom: .9rem; }
+
+    .skill-bar { margin-bottom: .8rem; }
+    .skill-header { display: flex; justify-content: space-between; margin-bottom: .3rem; font-size: .75rem; font-weight: 300; }
+    .skill-pct { font-family: 'Share Tech Mono', monospace; font-size: .68rem; color: var(--cyan); }
+    .bar-track { height: 3px; background: rgba(142,170,191,.15); }
+    .bar-fill { height: 100%; background: linear-gradient(to right, var(--cyan2), var(--cyan)); }
+
+    .certs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+    .cert { font-family: 'Share Tech Mono', monospace; font-size: .6rem; letter-spacing: .07em; border: 1px solid rgba(0,229,204,.25); padding: .28rem .7rem; color: rgba(0,229,204,.8); border-radius: 2px; }
+
+    .contact-row { display: flex; flex-wrap: wrap; gap: .7rem; }
+    .contact-btn {
+      padding: .65rem 1.3rem; border: 1px solid rgba(0,229,204,.4);
+      background: transparent; font-family: 'Exo 2', sans-serif;
+      font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--cyan);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%,100%{ opacity: 1; } 50%{ opacity: .3; } }
+
+    /* TABLET */
+    @media (max-width: 820px) {
+      .profile-wrapper { grid-template-columns: 1fr; gap: 2.5rem; padding-top: 2rem; }
+      .profile-left { max-width: 320px; margin: 0 auto; width: 100%; }
+    }
+    /* MOBILE */
+    @media (max-width: 480px) {
+      .nav-logo { font-size: .7rem; }
+      .nav-badge { display: none; }
+      .avatar-wrap { width: 200px; height: 240px; }
+      .avatar-wrap img { width: 200px; height: 200px; }
+      .avatar-ring { inset: -6px; }
+      .profile-name { font-size: 2rem; }
+      .stats-2col { grid-template-columns: 1fr 1fr; }
+      .skill-header { font-size: .7rem; }
+      .contact-row { gap: .5rem; }
+      .contact-btn { padding: .55rem 1rem; font-size: .65rem; }
+    }

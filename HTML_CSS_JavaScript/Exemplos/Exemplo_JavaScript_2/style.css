@@ -1,0 +1,52 @@
+* {
+
+    margin: 0;
+    padding: 0;
+    
+}
+
+body {
+
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#circulo {
+
+    background-color: black;
+    border-radius: 100px;
+    width: 100px;
+    height: 100px;
+    top: 5%;
+
+}
+
+.botao {
+
+    position: absolute;
+    top: 70%;
+    width: 70px;
+    height: 30px;
+
+}
+
+#botaoAzul {
+
+    left: 40%;
+
+}
+
+#botaoVermelho {
+
+    left: 47.5%;
+    
+}
+
+#botaoAmarelo {
+
+    left: 55%;
+    
+}

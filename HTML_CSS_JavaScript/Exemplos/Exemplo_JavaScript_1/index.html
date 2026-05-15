@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href = "sytle.css" rel = "stylesheet">
+</head>
+<body>
+    
+    <h1>
+        Bom dia
+    </h1>
+
+    <!-- Recebe um valor do "index_script.js" -->
+    <p id = "texto"></p>
+
+    <p>
+        <script>
+            
+            document.write("Testando dentro do HTML");
+            document.write(5+5);
+
+        </script>
+    </p>
+
+    <!-- Referenciando em outro arquivo (SEM POR ÚLTIMO NO CÓDIGO)-->
+    <script src = "js/index_script.js"></script>
+
+</body>
+</html>

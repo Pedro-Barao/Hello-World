@@ -1,0 +1,92 @@
+* {
+
+    margin: 0;
+    padding: 0;
+
+}
+
+body {
+
+    background-color: #2a362a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+}
+
+.container {
+
+    background-color: #5E7663;
+    box-shadow: 5px 5px 3px 5px #303d33;
+    border-radius: 10px;
+    width: 400px;
+    height: 550px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+h1 {
+
+    background-color: #4B7043;
+    box-shadow: 5px 5px 3px 5px #293d25;
+    border-radius: 10px;
+    margin-bottom: 10%;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 300px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ffffff;
+
+}
+
+input {
+
+    width: 300px;
+    height: 30px;
+    margin-left: 3%;
+    margin-top: 5%;
+    margin-bottom: 15%;
+    border-radius: 10px;
+    background-color: rgb(21, 32, 23);
+    color: #ffffff;
+    padding: 3px;
+
+}
+
+input::placeholder {
+
+    color: #9c9c9c;
+    font-style: italic;
+
+}
+
+.questao {
+
+    margin-left: 3%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #ffffff;
+
+}
+
+button {
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5%;
+    background-color: #24700d;
+    border-radius: 10px;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ffffff;
+    width: 300px;
+    height: 60px;
+
+}

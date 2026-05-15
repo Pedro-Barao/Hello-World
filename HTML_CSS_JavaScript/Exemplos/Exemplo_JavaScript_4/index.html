@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href = "style.css" rel = "stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    
+    <p id = "texto">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque libero eius amet reprehenderit officiis labore sed voluptates exercitationem reiciendis. Repudiandae, unde deserunt numquam ratione aliquam nihil ad repellendus fugiat porro.</p>
+
+    <table id = "tabelaModificacoes">
+
+        <tr>
+            
+            <th><p class = "tituloBotoes">Tamanho Fonte:</p></th>
+            <th><p class = "tituloBotoes">Tipo Fonte:</p></th>
+            <th><p class = "tituloBotoes">Cor Fonte:</p></th>
+            <th><p class = "tituloBotoes">Cor Fundo:</p></th>
+
+        </tr>
+
+        <tr>
+
+            <th><button id = "pequeno" class = "botoes" onclick = "mudarTamanhoFonte(10)">Pequeno</button></th>
+            <th><button id = "timesNewRoman" class = "botoes" onclick = "mudarTipoFonte('times new roman')">Times New Roman</button></th>
+            <th><button id = "fontePreta" class = "botoes" onclick = "mudarCorFonte('preta')">Preta</button></th>
+            <th><button id = "fundoPreto" class = "botoes" onclick = "mudarCorFundo('preto')">Preto</button></th>
+
+        </tr>
+
+        <tr>
+
+            <th><button id = "medio" class = "botoes" onclick = "mudarTamanhoFonte(15)">Médio</button></th>
+            <th><button id = "arial" class = "botoes" onclick = "mudarTipoFonte('arial')">Arial</button></th>
+            <th><button id = "fonteBranca" class = "botoes" onclick = "mudarCorFonte('branca')">Branca</button></th>
+            <th><button id = "fundoBranco" class = "botoes" onclick = "mudarCorFundo('branco')">Branco</button></th>
+
+        </tr>
+
+        <tr>
+
+            <th><button id = "grande" class = "botoes" onclick = "mudarTamanhoFonte(20)">Grande</button></th>
+            <th><button id = "lucidaSans" class = "botoes" onclick = "mudarTipoFonte('lucida sans')">Lucida Sans</button></th>
+            <th><button id = "fonteCinza" class = "botoes" onclick = "mudarCorFonte('cinza')">Cinza</button></th>
+            <th><button id = "fundoCinza" class = "botoes" onclick = "mudarCorFundo('cinza')">Cinza</button></th>
+
+        </tr>
+
+        <tr>
+
+            <th><button id = "gigante" class = "botoes" onclick = "mudarTamanhoFonte(25)">Gigante</button></th>
+            <th><button id = "courierNew" class = "botoes" onclick = "mudarTipoFonte('courier new')">Courier New</button></th>
+            <th><button id = "fonteAmarela" class = "botoes" onclick = "mudarCorFonte('amarela')">Amarela</button></th>
+            <th><button id = "fundoAmarelo" class = "botoes" onclick = "mudarCorFundo('amarelo')">Amarelo</button></th>
+
+        </tr>
+
+
+    </table>
+
+    <script src = "js/index.js"></script>
+
+</body>
+</html>

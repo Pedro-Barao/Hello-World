@@ -1,0 +1,60 @@
+* {
+
+    margin: 0;
+    padding: 0;
+
+}
+
+body {
+
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+
+}
+
+#texto {
+
+    margin: 7%;
+    margin-left: 15%;
+    margin-right: 15%;
+    background-color: rgb(0, 0, 0);
+    color: rgb(205, 205, 205);
+    height: 70px;
+    width: 2000px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+#tabelaModificacoes {
+
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    top: 45%;
+    width: 1000px;
+
+}
+
+.tituloBotoes {
+
+    font-size: 25px;
+    margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+
+}
+
+.botoes {
+
+    width: 150px;
+    height: 40px;
+    margin: 10px;
+
+}
