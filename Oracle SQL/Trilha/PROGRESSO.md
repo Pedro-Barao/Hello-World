@@ -16,7 +16,7 @@ Legenda: ⬜ nao feito | 🟡 feito, falta revisar | ✅ correto | ⚠️ precis
 | # | Modulo | Arquivo | Status |
 |---|--------|---------|--------|
 | 1 | DDL e DML (CREATE, ALTER, INSERT, UPDATE, DELETE, COMMIT/ROLLBACK) | `Modulo_01_DDL_DML.sql` (respostas em `DDL e DML/Exercícios/Respostas/DDL_DML.sql`) | ✅ fechado em 24/11 às 21:27 |
-| 2 | SELECT (WHERE, ORDER BY, FETCH FIRST, funcoes, DUAL, NVL) | `Modulo_02_SELECT.sql` | ⬜ |
+| 2 | SELECT (WHERE, ORDER BY, FETCH FIRST, funcoes, DUAL, NVL) | `Modulo_02_SELECT.sql` (respostas em `Consultas/Exercícios/Respostas/Consultas.sql`) | ✅ fechado em 25/11 às 17:15 |
 | 3 | Agregacao (GROUP BY, HAVING) | `Modulo_03_Agregacao.sql` | ⬜ |
 | 4 | JOINs (INNER, LEFT, varias tabelas) | a gerar | ⬜ |
 | 5 | Subqueries (IN, EXISTS, correlacionada) | a gerar | ⬜ |
@@ -42,7 +42,27 @@ Ao fim de cada modulo eu gero um relatorio completo em `../../Relatorios/` (mode
 | 1.4 Reajuste de 10% | ✅ pela leitura (21:15). UPDATE com aumento, COMMIT antes, ROLLBACK provado com os valores, UPDATE de novo e COMMIT. Valores anotados conferem. |
 | 1.5 Delete | ✅ (21:25). `NOT EXISTS`, previa com LEFT JOIN e o erro ORA-02292 do Machado colado e explicado. |
 
+## Exercicios do modulo 2 (correcao por leitura, 25/11 17:12)
+| Ex. | Situacao |
+|-----|----------|
+| 2.1 | ✅ (17:15) ORDER BY sem coluna e depois nome de coluna digitado errado; corrigidos. |
+| 2.2 | ✅ Na 1a versao excluiu os limites (`>` e `<`); corrigiu com pista. |
+| 2.3 | ✅ Errou aspas duplas em texto (2a vez); logica com UPPER nos dois lados certa. |
+| 2.4 | ✅ |
+| 2.5 | ✅ |
+| 2.6 | ✅ (17:15) Primeiro usou a conversao no sentido errado e ano com 2 digitos; corrigiu com pista. |
+| 2.7 | ✅ |
+| 2.8 | ✅ Duvida de interpretacao (filtro x CASE), resolvida. |
+
+## Re-testar sem consulta (a partir de ~02/12)
+1. `NVL` (consultado: nao lembrava ou nao conhecia)
+2. `FETCH FIRST` (consultado: esqueceu por usar pouco)
+3. `ROUND` (consultado sabendo o termo)
+`LENGTH` saiu por analogia com outras linguagens, sem consulta.
+
 ## Erros recorrentes
+- **Aspas duplas em texto:** 2a vez (1.3 em 24/11 e 2.3 em 25/11).
+- **Declarar pronto sem revisar/rodar:** modulo 2 dado como finalizado com 2.1 e 2.6 pendentes.
 - **Sintaxe de MySQL no Oracle:** `AUTO_INCREMENT`, `DEFAULT` depois de `NOT NULL`, aspas duplas em texto, `CREATE SCHEMA IF NOT EXISTS`, aspas simples em senha.
 - **Atencao a detalhes:** coluna de identity sem tipo, `vARCHAR2`, `FROM LIVROS` (nome errado), `JOIN` sem `ON`, comparar `Id_Cliente` com `Id_Venda`, `COUNT` sem `GROUP BY`, `= NULL` no lugar de `IS NULL`.
 - **Precisao numerica:** `DECIMAL(p,s)`: p e o total de digitos, e nao os digitos antes da virgula.
