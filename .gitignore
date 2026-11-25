@@ -7,20 +7,24 @@
 bin/
 
 # --- Dados de outras pessoas: NUNCA versionar (o repositorio e publico) ---
-# Notas, pareceres e devolutivas de alunos.
-Java/POO-Unicesumar/NOTAS P2 POO/
-Java/POO-Unicesumar/Outros/NOTAS0209*.pdf
-Java/POO-Unicesumar/Outros/notas_oficiais_p1.pdf
-Java/POO-Unicesumar/POO-2026-NOTAS.pdf
+# Notas, pareceres e devolutivas de alunos (qualquer pasta).
+NOTAS*
+*DEVOLUTIVAS*
+*Pareceres*
+notas_oficiais*
+Java/POO-Unicesumar/Documentos/Notas/
+# Trabalho em grupo com nome, RA e e-mail de colegas.
+Arquitetura de Software/
 
-# --- Material dos professores: aulas, slides, listas, provas e gabaritos ---
+# --- Material dos professores: aulas, slides, exemplos, listas, provas e gabaritos ---
 # Nao publicar sem autorizacao deles. Ficam so na maquina.
+# PDFs de aula e slides dentro de qualquer pasta "Documentos" (codigo de exemplo continua versionado):
+**/Documentos/*.pdf
+**/Documentos/**/*.pdf
 Sistemas Operacionais/
 Engenharia-de-Requisitos/
-Java/POO-Unicesumar/Aulas/
-Java/POO-Unicesumar/Listas de Exercicios/
-Java/POO-Unicesumar/Material de Apoio/
-Java/POO-Unicesumar/Outros/
+Java/POO-Unicesumar/Documentos/
+Java/POO-Unicesumar/Exercícios/Enunciados/
 
 # --- Relatorios pessoais de estudo (ficam so na maquina) ---
 Relatorios/Relatórios_Diarios/
