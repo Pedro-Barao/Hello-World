@@ -1,0 +1,27 @@
+# --- Compilados e ambiente ---
+*.class
+*.o
+*.obj
+*.exe
+.vscode/
+bin/
+
+# --- Dados de outras pessoas: NUNCA versionar (o repositorio e publico) ---
+# Notas, pareceres e devolutivas de alunos.
+Java/POO-Unicesumar/NOTAS P2 POO/
+Java/POO-Unicesumar/Outros/NOTAS0209*.pdf
+Java/POO-Unicesumar/Outros/notas_oficiais_p1.pdf
+Java/POO-Unicesumar/POO-2026-NOTAS.pdf
+
+# --- Material dos professores: aulas, slides, listas, provas e gabaritos ---
+# Nao publicar sem autorizacao deles. Ficam so na maquina.
+Sistemas Operacionais/
+pdf_e_outros_trabalhos/Engenharia-de-Requisitos/
+Java/POO-Unicesumar/Aulas/
+Java/POO-Unicesumar/Listas de Exercicios/
+Java/POO-Unicesumar/Material de Apoio/
+Java/POO-Unicesumar/Outros/
+
+# --- Relatorios pessoais de estudo (ficam so na maquina) ---
+Relatorios/Relatórios_Diarios/
+Relatorios/TEMPOS.md
