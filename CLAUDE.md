@@ -76,8 +76,8 @@ Excel Viewer (`grapecity.gc-excelviewer`), Docker (`ms-azuretools.vscode-docker`
 Instalar uma por vez com `code --install-extension <id>`.
 
 Programas que as extensões precisam (instalar com `sudo`, no Ubuntu):
-`sudo apt install build-essential gdb dotnet-sdk-8.0 python3-pip python3-venv nodejs npm sqlite3`
-(se o `dotnet-sdk-8.0` não existir na sua versão, procurar com `apt search dotnet-sdk`). Java 21 e Maven, Docker e Git já estavam instalados.
+`sudo apt install build-essential gdb dotnet-sdk-10.0 python3-pip python3-venv nodejs npm sqlite3`
+(no Ubuntu 26.04 só existe o `dotnet-sdk-10.0`; em outra versão, procurar com `apt search dotnet-sdk`). Java 21 e Maven, Docker e Git já estavam instalados.
 
 ## Em um computador novo
 1. Instalar `git` e o GitHub CLI (`gh`), rodar `gh auth login` e `gh auth setup-git`, e configurar `git config --global user.name` e `user.email`.
