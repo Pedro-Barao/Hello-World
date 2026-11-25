@@ -9,7 +9,8 @@
 | `My SQL/` | Trabalhos em MySQL |
 | `Oracle SQL/` | Trilha de estudo de Oracle SQL |
 | `Sistemas Operacionais/` | Material do professor (slides, listas, exemplos em C, planilhas). Só local |
-| `pdf_e_outros_trabalhos/` | PDFs e trabalhos avulsos. `Engenharia-de-Requisitos/` é material do professor, só local |
+| `pdf_e_outros_trabalhos/` | PDFs e trabalhos avulsos |
+| `Engenharia-de-Requisitos/` | Aulas da matéria. Material do professor, só local |
 | `Relatorios/` | Modelo de relatório e cronograma de revisão |
 
 Contexto geral para o Claude Code: veja o `CLAUDE.md`.

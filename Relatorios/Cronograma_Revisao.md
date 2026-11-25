@@ -8,7 +8,7 @@ Os horários são sugestão: ajuste conforme a sua rotina real e me diga o que m
 | Segunda | Sistemas Operacionais | `Sistemas Operacionais` | Slides do Tanenbaum, listas de capítulo, planilhas de escalonamento, memória e deadlock |
 | Terça | Java POO | `Java/POO-Unicesumar` | Listas de exercício, material de apoio, simulados e folha de sintaxe |
 | Quarta | Oracle SQL | `Oracle SQL/Trilha` | Módulo da vez da trilha, em modo teste |
-| Quinta | Engenharia de Requisitos | `pdf_e_outros_trabalhos/Engenharia-de-Requisitos` | Aulas 02 a 10: conceitos, categorias, documentação, gestão |
+| Quinta | Engenharia de Requisitos | `Engenharia-de-Requisitos` | Aulas 02 a 10: conceitos, categorias, documentação, gestão |
 
 ## Estrutura de cada dia (sugestão, cerca de 1h30)
 1. **Aquecimento (15 min):** refazer de cabeça os erros da última sessão da matéria.

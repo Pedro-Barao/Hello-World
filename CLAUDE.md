@@ -16,7 +16,8 @@ Idioma de trabalho: **português do Brasil**.
 | `My SQL/` | Trabalhos em MySQL |
 | `Oracle SQL/` | Estudo de Oracle SQL: `Trilha/` (módulos e `PROGRESSO.md`) e `Exercícios/` |
 | `Sistemas Operacionais/` | Slides do Tanenbaum, listas por capítulo, exemplos em C e planilhas. Material do professor: **só local** |
-| `pdf_e_outros_trabalhos/` | PDFs e trabalhos avulsos. `Engenharia-de-Requisitos/` guarda as aulas dessa matéria, que são do professor e ficam **só locais** |
+| `pdf_e_outros_trabalhos/` | PDFs e trabalhos avulsos |
+| `Engenharia-de-Requisitos/` | Aulas da matéria. Material do professor: **só local** |
 | `Relatorios/` | Modelo de relatório e cronograma de revisão |
 
 ## Como o Claude deve trabalhar com o Pedro
