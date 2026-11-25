@@ -4,20 +4,34 @@ Este arquivo é lido automaticamente quando o Claude Code é aberto nesta pasta,
 Ele guarda só o **contexto geral**. Não há dados pessoais aqui, porque o repositório é **público**.
 
 ## O que é este repositório
-Trabalhos e material de estudo da faculdade (Unicesumar), organizados por linguagem ou tema.
+Trabalhos e material de estudo da faculdade (Unicesumar), organizados por linguagem ou matéria.
 Idioma de trabalho: **português do Brasil**.
 
-## Estrutura
-| Pasta | Conteúdo |
-|-------|----------|
-| `Java/` | Aulas e exercícios de Java. Os arquivos soltos são antigos; `Java/POO-Unicesumar/` é o material de POO da Unicesumar, separado do resto |
-| `Java/POO-Unicesumar/` | Os seus exercícios e projetos de POO: `Lista_*`, `Lista-Interativa-*`, `Aula*Kit`, `TestePOO`, `StarLog-Zero` etc. As pastas `Aulas`, `Listas de Exercicios`, `Material de Apoio` e `Outros` são dos professores e ficam **só locais** |
-| `C/`, `C#/`, `Python/`, `HTML_CSS_JavaScript/` | Exercícios por linguagem |
-| `My SQL/` | Trabalhos em MySQL |
-| `Oracle SQL/` | Estudo de Oracle SQL: `Trilha/` (módulos e `PROGRESSO.md`) e `Exercícios/` |
-| `Sistemas Operacionais/` | Slides do Tanenbaum, listas por capítulo, exemplos em C e planilhas. Material do professor: **só local** |
-| `pdf_e_outros_trabalhos/` | PDFs e trabalhos avulsos |
-| `Engenharia-de-Requisitos/` | Aulas da matéria. Material do professor: **só local** |
+## Estrutura padrão
+Cada linguagem ou matéria tem uma pasta. Dentro dela, cada **conteúdo** (assunto) segue a mesma forma:
+
+```
+Linguagem ou Matéria/
+├── Conteúdo/                      um assunto (ex.: "Ponteiro", "Cap 03 - Gerenciamento de memória")
+│   ├── Exercícios/
+│   │   ├── Enunciados/            só se houver enunciado
+│   │   └── Respostas/             o que o Pedro fez (código, planilhas, diagramas)
+│   └── Documentos/                arquivos da matéria: aulas, slides (PDF só local), exemplos de código, guias
+└── Trilha/                        só onde há trilha guiada de estudo (hoje, Oracle SQL)
+```
+**Ao criar ou mover arquivos, seguir essa forma.** Projetos Java (com `src`, `bin`, `nbproject`) e pastas de código
+**não são desmontados**: ficam inteiros dentro de `Respostas/`, para continuarem compilando.
+
+| Pasta | Conteúdos |
+|-------|-----------|
+| `C/`, `C#/`, `Python/`, `HTML_CSS_JavaScript/` | Exercícios por linguagem. Em `C/`, `Seq V1` e `Seq V2` são versões do mesmo tema |
+| `Java/` | Conteúdos soltos (Fundamentos, Encapsulamento, Listas 1 a 6, Streams...) e `POO-Unicesumar/`, a matéria de POO |
+| `Java/POO-Unicesumar/` | `Exercícios/Respostas/` com as listas e projetos do Pedro. `Exercícios/Enunciados/` e `Documentos/` são dos professores (só locais) |
+| `My SQL/` | Funções, Procedures, Triggers, Views, Lista 1, Trabalho Takahashi, Modelagem Conceitual |
+| `Oracle SQL/` | `Trilha/` (módulos, `PROGRESSO.md`), `Criação de Usuário/`, `DDL e DML/` |
+| `Sistemas Operacionais/` | Um conteúdo por capítulo do Tanenbaum, mais `Trabalhos e Provas`. **Só local** |
+| `Engenharia-de-Requisitos/` | Dado e Conhecimento, Regras de Negócio, Requisitos, Gestão de Requisitos. **Só local** |
+| `Arquitetura de Software/` | Trabalho em grupo com dados de colegas. **Só local** |
 | `Relatorios/` | Modelo de relatório e cronograma de revisão |
 
 ## Como o Claude deve trabalhar com o Pedro
@@ -27,6 +41,8 @@ Idioma de trabalho: **português do Brasil**.
 - **Honestidade:** se não executou o código, dizer que a conferência foi só por leitura.
   O Claude só vê o que está **salvo no disco**, e não o que está na tela do editor.
 - **Módulos futuros:** gerar o módulo seguinte só quando o Pedro chegar nele, para ajustar a dificuldade.
+- **Pesquisa externa:** o Pedro pesquisa quando não sabe uma estrutura, e isso é bom. Pedir que marque no código com `-- pesquisei: ...`,
+  para o relatório separar o que ele sabia do que consultou. Resultados de busca costumam ser de MySQL: preferir `docs.oracle.com`.
 
 ## Oracle SQL — ambiente
 - Banco: **Oracle Free** em contêiner Docker, serviço `FREEPDB1`, porta `1521` (versão 23ai ou mais nova).
@@ -43,21 +59,36 @@ Idioma de trabalho: **português do Brasil**.
 - Medidas de tempo usam a data de gravação dos arquivos (`stat`) e o horário dos comandos (`date`). São indícios, e não um cronômetro.
 
 ## Git e GitHub — regras
-- O repositório é **público**. **Nunca** versionar notas, pareceres, devolutivas ou qualquer dado de outras pessoas.
+- O repositório é **público**. **Nunca** versionar notas, pareceres, devolutivas ou qualquer dado de outras pessoas (nome, RA, e-mail).
   Essas regras estão no `.gitignore`. Antes de cada `push`, conferir `git status` e o que vai subir.
-- **Material dos professores** (aulas, slides, listas, provas oficiais e gabaritos) também **não** é versionado, para não publicar sem autorização deles.
-  Só entram no repositório os trabalhos e exercícios feitos pelo próprio Pedro.
+- **Material dos professores** (aulas, slides, exemplos, listas, provas e gabaritos) também **não** é versionado, para não publicar sem autorização deles.
+  Os PDFs dentro de pastas `Documentos/` ficam fora do Git, e `Sistemas Operacionais/`, `Engenharia-de-Requisitos/` e `Java/POO-Unicesumar/Documentos/` também.
+  O código de exemplo e os trabalhos feitos pelo próprio Pedro continuam versionados.
 - Binários compilados (`*.exe`, `*.o`, `*.class`) ficam fora do controle de versão daqui para frente.
   Os que já vieram da migração continuam versionados.
 - Mensagens de commit descritivas, em português, e commits separados por assunto.
 - Não usar `git push --force` nem reescrever o histórico sem pedido explícito do Pedro.
 
+## Ferramentas e extensões do VS Code
+Extensões usadas: Java (pack completo, Maven, Gradle, Spring), Oracle SQL Developer, Database Client, C/C++ (`ms-vscode.cpptools`),
+Python (`ms-python.python`), C# (`ms-dotnettools.csharp`), Live Server (`ritwickdey.LiveServer`), PDF (`tomoki1207.pdf`),
+Excel Viewer (`grapecity.gc-excelviewer`), Docker (`ms-azuretools.vscode-docker`), SQLite (`alexcvzz.vscode-sqlite`) e Claude Code.
+Instalar uma por vez com `code --install-extension <id>`.
+
+Programas que as extensões precisam (instalar com `sudo`, no Ubuntu):
+`sudo apt install build-essential gdb dotnet-sdk-8.0 python3-pip python3-venv nodejs npm sqlite3`
+(se o `dotnet-sdk-8.0` não existir na sua versão, procurar com `apt search dotnet-sdk`). Java 21 e Maven, Docker e Git já estavam instalados.
+
 ## Em um computador novo
 1. Instalar `git` e o GitHub CLI (`gh`), rodar `gh auth login` e `gh auth setup-git`, e configurar `git config --global user.name` e `user.email`.
 2. Clonar: `gh repo clone Pedro-Barao/Hello-World`.
-3. Para o Oracle: instalar o Docker, entrar no grupo `docker` e fazer logout e login. Depois subir o contêiner Oracle Free e criar a conexão `ESTUDO` na extensão.
-4. Abrir o Claude Code **dentro desta pasta**. A memória do Claude é local a cada máquina, e este arquivo faz o papel de ponte.
-5. Os arquivos de notas, o material dos professores e os relatórios diários estão no `.gitignore`, então **não vêm no `git clone`**. Eles só existem na máquina original. Copie-os à mão se precisar.
+3. Instalar as extensões e os programas da seção acima.
+4. Para o Oracle: instalar o Docker, entrar no grupo `docker` e fazer logout e login. Depois subir o contêiner Oracle Free
+   (de preferência com `-p 127.0.0.1:1521:1521`, para não abrir o banco para a rede) e criar a conexão `ESTUDO` na extensão.
+5. Abrir o Claude Code **dentro desta pasta**. A memória do Claude é local a cada máquina, e este arquivo faz o papel de ponte.
+6. Os arquivos de notas, o material dos professores e os relatórios diários estão no `.gitignore`, então **não vêm no `git clone`**.
+   Eles só existem na máquina original. Copie-os à mão se precisar.
 
 ## Histórico
-O material de Java POO, Sistemas Operacionais, Engenharia de Requisitos e Oracle SQL veio do repositório `Unicesumar-POO`, que foi incorporado aqui.
+O material de Java POO, Sistemas Operacionais, Engenharia de Requisitos e Oracle SQL veio do repositório `Unicesumar-POO`.
+Esse repositório foi mantido, mas passou a ser **privado**.

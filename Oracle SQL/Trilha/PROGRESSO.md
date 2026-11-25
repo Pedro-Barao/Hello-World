@@ -15,7 +15,7 @@ Legenda: ⬜ nao feito | 🟡 feito, falta revisar | ✅ correto | ⚠️ precis
 ## Modulos
 | # | Modulo | Arquivo | Status |
 |---|--------|---------|--------|
-| 1 | DDL e DML (CREATE, ALTER, INSERT, UPDATE, DELETE, COMMIT/ROLLBACK) | `Modulo_01_DDL_DML.sql` (respostas em `Exercícios/Exercício_1/DDL_DML.sql`) | ✅ fechado em 24/11 às 21:27 |
+| 1 | DDL e DML (CREATE, ALTER, INSERT, UPDATE, DELETE, COMMIT/ROLLBACK) | `Modulo_01_DDL_DML.sql` (respostas em `DDL e DML/Exercícios/Respostas/DDL_DML.sql`) | ✅ fechado em 24/11 às 21:27 |
 | 2 | SELECT (WHERE, ORDER BY, FETCH FIRST, funcoes, DUAL, NVL) | `Modulo_02_SELECT.sql` | ⬜ |
 | 3 | Agregacao (GROUP BY, HAVING) | `Modulo_03_Agregacao.sql` | ⬜ |
 | 4 | JOINs (INNER, LEFT, varias tabelas) | a gerar | ⬜ |
