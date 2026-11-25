@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório Interativo • Aula 30 | Prática DAO Completa & CRUD de Negócio</title>
+    <!-- Prism.js para Realce Sintático Elegante de Java -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #14b8a6;
+            --secondary: #1e3a8a;
+            --secondary-light: #3b82f6;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #b45309;
+            --success: #15803d;
+            --danger: #b91c1c;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 24px 16px 80px 16px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        header.page-header {
+            background: linear-gradient(135deg, #042f2e 0%, #0f766e 100%);
+            color: white;
+            padding: 32px 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .badge-institution {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        header h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        header p.subtitle {
+            font-size: 0.95rem;
+            color: #ccfbf1;
+            margin-bottom: 16px;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 14px;
+        }
+
+        .meta-item strong {
+            color: #5eead4;
+        }
+
+        /* Barra de Progresso Gamificada */
+        .progress-bar-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--primary);
+            min-width: 140px;
+            text-align: right;
+        }
+
+        /* Cards Teóricos */
+        .theory-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .theory-card h2 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analogy-box {
+            background: #f0fdfa;
+            border: 1px dashed #5eead4;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.92rem;
+            color: #115e59;
+        }
+
+        .history-tag {
+            display: inline-block;
+            background: #ccfbf1;
+            color: #0f766e;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Questões */
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .question-card.answered-correct {
+            border-color: #86efac;
+            background: #f0fdf4;
+        }
+
+        .question-card.answered-incorrect {
+            border-color: #fca5a5;
+            background: #fef2f2;
+        }
+
+        /* Etiqueta IMPORTANTE solicitada */
+        .badge-importante {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .question-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.15s ease;
+        }
+
+        .option-item:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .option-item input[type="radio"] {
+            margin-top: 4px;
+            cursor: pointer;
+        }
+
+        .option-label {
+            font-size: 0.92rem;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .feedback-box {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            display: none;
+        }
+
+        .feedback-box.correct {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            display: block;
+        }
+
+        .feedback-box.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
+        /* Editor Interativo de Código */
+        .editor-container {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 14px;
+            border: 1px solid #334155;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        .code-input {
+            width: 100%;
+            height: 180px;
+            background: #020617;
+            color: #f1f5f9;
+            font-family: "Fira Code", "Courier New", Courier, monospace;
+            font-size: 0.9rem;
+            padding: 12px;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            resize: vertical;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        .code-input:focus {
+            border-color: var(--primary-light);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-test {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .btn-test:hover {
+            background: #115e59;
+        }
+
+        .btn-reset {
+            background: #334155;
+            color: #cbd5e1;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .code-feedback {
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .code-feedback.success {
+            background: #064e3b;
+            color: #6ee7b7;
+            border: 1px solid #059669;
+            display: block;
+        }
+
+        .code-feedback.error {
+            background: #450a0a;
+            color: #fca5a5;
+            border: 1px solid #dc2626;
+            display: block;
+        }
+
+        /* Seção da Lista Oficial Desbloqueada */
+        #official-task-section {
+            display: none;
+            margin-top: 36px;
+            background: #ffffff;
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.15);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-badge-unlocked {
+            background: #ccfbf1;
+            color: #0f766e;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        /* Cofre Criptográfico */
+        .vault-card {
+            background: linear-gradient(135deg, #134e4a 0%, #042f2e 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-top: 30px;
+            border: 1px solid #115e59;
+        }
+
+        .vault-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .vault-icon {
+            font-size: 2.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 50%;
+        }
+
+        .vault-title h3 {
+            font-size: 1.3rem;
+            color: #f8fafc;
+        }
+
+        .vault-title p {
+            font-size: 0.85rem;
+            color: #99f6e4;
+        }
+
+        .clue-badge {
+            background: rgba(20, 184, 166, 0.2);
+            border: 1px solid rgba(20, 184, 166, 0.4);
+            color: #5eead4;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 18px;
+        }
+
+        .unlock-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .unlock-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: #020617;
+            border: 1px solid #115e59;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-family: monospace;
+            outline: none;
+        }
+
+        .unlock-input:focus {
+            border-color: #2dd4bf;
+        }
+
+        .unlock-btn {
+            background: #0d9488;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .unlock-btn:hover {
+            background: #0f766e;
+        }
+
+        .vault-msg {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .vault-msg.success {
+            background: rgba(22, 163, 74, 0.2);
+            border: 1px solid #22c55e;
+            color: #86efac;
+            display: block;
+        }
+
+        .vault-msg.error {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            display: block;
+        }
+
+        #decrypted-container {
+            display: none;
+            margin-top: 24px;
+            background: #ffffff;
+            color: #1e293b;
+            padding: 28px;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            border: 1px solid #e2e8f0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header class="page-header">
+        <div class="badge-institution">UniCesumar • Engenharia de Software & ADS</div>
+        <h1>Laboratório Interativo • Aula 30</h1>
+        <p class="subtitle">Prática DAO Completa: Construindo o CRUD de Negócio de Ponta a Ponta</p>
+        <div class="header-meta">
+            <div class="meta-item">Docente: <strong>Prof. Me. Júlio B. Herculani</strong></div>
+            <div class="meta-item">Ambiente: <strong>Offline / Standalone</strong></div>
+            <div class="meta-item">Modo: <strong>Autoaprendizagem Prática Ativa</strong></div>
+            <div class="meta-item">Foco P2: <strong>CRUD Completo, executeUpdate e Tratamento</strong></div>
+        </div>
+    </header>
+
+    <!-- Barra de Progresso -->
+    <div class="progress-bar-container">
+        <span style="font-size:0.9rem; font-weight:600; color:#334155;">Progresso para Desbloquear a Lista:</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0 de 7 Concluídos</div>
+    </div>
+
+    <!-- MÓDULO TEÓRICO 1: O ACRÔNIMO CRUD -->
+    <div class="theory-card">
+        <div class="history-tag">História da Computação • James Martin (1983)</div>
+        <h2>📦 1. De Onde Veio a Sigla CRUD?</h2>
+        <p>Em 1983, o britânico <strong>James Martin</strong>, pioneiro da Engenharia da Informação, cunhou o acrônimo <strong>CRUD</strong> em seu livro clássico <em>"Managing the Data-Base Environment"</em>.</p>
+        <p style="margin-top:8px;">Martin demonstrou que 80% dos softwares corporativos do mundo orbitam em torno dessas 4 operações atômicas fundamentais:</p>
+        <ul style="margin-left: 20px; margin-top: 8px; font-size: 0.92rem; color: #334155;">
+            <li><strong>C - Create:</strong> Inserir novo registro no banco (<code>INSERT INTO</code>).</li>
+            <li><strong>R - Read:</strong> Consultar tuplas gravadas (<code>SELECT</code> pontual ou coletivo).</li>
+            <li><strong>U - Update:</strong> Modificar atributos de um registro existente (<code>UPDATE ... WHERE</code>).</li>
+            <li><strong>D - Delete:</strong> Remover uma tupla do armazenamento (<code>DELETE FROM ... WHERE</code>).</li>
+        </ul>
+        
+        <div class="analogy-box">
+            <strong>📸 Metáfora Lúdica do Álbum de Família Físico:</strong><br>
+            • <em>Create:</em> Colar uma foto revelada na folha do álbum.<br>
+            • <em>Read:</em> Abrir o álbum para folhear ou procurar uma foto no índice.<br>
+            • <em>Update:</em> Passar corretivo e corrigir uma data errada na legenda da foto.<br>
+            • <em>Delete:</em> A foto borrou ou perdeu o sentido; você descola da página e joga fora no lixo.
+        </div>
+    </div>
+
+    <!-- QUESTÃO 1 (MÚLTIPLA ESCOLHA) -->
+    <div class="question-card" id="card-q1">
+        <span class="badge-importante">⚠️ IMPORTANTE • HISTÓRIA CRUD P2</span>
+        <h3>Questão 1: A Origem e Abrangência do Acrônimo CRUD</h3>
+        <p style="font-size:0.95rem; color:#334155;">
+            Sobre a história e a aplicação do acrônimo CRUD na Engenharia de Software, assinale a opção correta:
+        </p>
+        <ul class="options-list">
+            <li class="option-item" onclick="selectRadio('q1', 'a30_q1_a')">
+                <input type="radio" name="a30_q1" id="a30_q1_a">
+                <label class="option-label" for="a30_q1_a"><strong>(A)</strong> Foi formalizado por James Martin (1983) e sintetiza o ciclo de vida dos dados em sistemas OLTP: Create (INSERT), Read (SELECT), Update (UPDATE) e Delete (DELETE).</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q1', 'a30_q1_b')">
+                <input type="radio" name="a30_q1" id="a30_q1_b">
+                <label class="option-label" for="a30_q1_b"><strong>(B)</strong> Surgiu no manifesto ágil de 2001 para proibir comandos SQL manuais em favor do Hibernate.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q1', 'a30_q1_c')">
+                <input type="radio" name="a30_q1" id="a30_q1_c">
+                <label class="option-label" for="a30_q1_c"><strong>(C)</strong> Aplica-se exclusivamente a bancos de dados NoSQL orientados a documentos JSON.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q1', 'a30_q1_d')">
+                <input type="radio" name="a30_q1" id="a30_q1_d">
+                <label class="option-label" for="a30_q1_d"><strong>(D)</strong> É um design pattern GoF da categoria comportamental para controle de threads.</label>
+            </li>
+        </ul>
+        <div class="feedback-box" id="fb-q1"></div>
+    </div>
+
+    <!-- MÓDULO TEÓRICO 2: O RETORNO DE EXECUTEUPDATE E O PERIGO DO WHERE -->
+    <div class="theory-card">
+        <div class="history-tag">Segurança e Integridade Transacional</div>
+        <h2>⚠️ 2. A Caneta Laser do Cirurgião: A Cláusula WHERE e as Linhas Afetadas</h2>
+        <p>Diferente do <code>executeQuery()</code> (que devolve um <code>ResultSet</code>), o método <code>executeUpdate()</code> retorna um número inteiro (<code>int</code>). Esse número indica exatamente <strong>quantas linhas no banco de dados foram realmente alteradas ou excluídas</strong>!</p>
+        <p style="margin-top:8px;">Se você executar <code>DELETE FROM produtos WHERE id = 999</code> e esse ID não existir, o banco não gera erro! Ele apenas devolve <code>0</code>. O DAO deve verificar <code>return linhasAfetadas > 0;</code> para que a View saiba avisar o usuário se o item foi realmente apagado ou não.</p>
+        
+        <div class="analogy-box" style="background:#fef2f2; border-color:#fca5a5; color:#991b1b;">
+            <strong>🚨 O Famoso "UPDATE sem WHERE" (Desastre de Produção):</strong><br>
+            A cláusula <code>WHERE id = ?</code> é a caneta laser de precisão do cirurgião. Se o médico acionar o laser sem apontar para a verruga, queima a sala inteira! Um <code>UPDATE produtos SET preco = 0.0;</code> sem <code>WHERE</code> zera o preço de todo o catálogo de uma loja em 1 segundo.
+        </div>
+    </div>
+
+    <!-- QUESTÃO 2 (MÚLTIPLA ESCOLHA) -->
+    <div class="question-card" id="card-q2">
+        <span class="badge-importante">⚠️ IMPORTANTE • UPDATE WHERE P2</span>
+        <h3>Questão 2: O Papel do Inteiro Retornado por <code>executeUpdate()</code></h3>
+        <p style="font-size:0.95rem; color:#334155;">
+            Na implementação dos métodos <code>atualizar(Produto p)</code> e <code>excluir(Long id)</code>, por que a boa prática da Engenharia de Software preconiza avaliar a expressão booleana <code>linhasAfetadas > 0</code>?
+        </p>
+        <ul class="options-list">
+            <li class="option-item" onclick="selectRadio('q2', 'a30_q2_a')">
+                <input type="radio" name="a30_q2" id="a30_q2_a">
+                <label class="option-label" for="a30_q2_a"><strong>(A)</strong> Porque se o retorno for menor que zero, significa que o disco SQLite está corrompido.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q2', 'a30_q2_b')">
+                <input type="radio" name="a30_q2" id="a30_q2_b">
+                <label class="option-label" for="a30_q2_b"><strong>(B)</strong> Porque o método <code>executeUpdate()</code> devolve o número da porta TCP em caso de sucesso.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q2', 'a30_q2_c')">
+                <input type="radio" name="a30_q2" id="a30_q2_c">
+                <label class="option-label" for="a30_q2_c"><strong>(C)</strong> Porque permite confirmar de forma determinística se o registro com o ID informado realmente existia e sofreu a mutação, evitando falsos positivos na interface.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q2', 'a30_q2_d')">
+                <input type="radio" name="a30_q2" id="a30_q2_d">
+                <label class="option-label" for="a30_q2_d"><strong>(D)</strong> Porque o Java obriga que todo método DML retorne obrigatoriamente a soma dos preços da tabela.</label>
+            </li>
+        </ul>
+        <div class="feedback-box" id="fb-q2"></div>
+    </div>
+
+    <!-- QUESTÃO 3 (MÚLTIPLA ESCOLHA) -->
+    <div class="question-card" id="card-q3">
+        <span class="badge-importante">⚠️ IMPORTANTE • DELETE WHERE P2</span>
+        <h3>Questão 3: O Impacto Catastrófico de Omitir o Filtro no DELETE</h3>
+        <p style="font-size:0.95rem; color:#334155;">
+            Um programador distraído escreveu o seguinte método de exclusão no DAO:
+        </p>
+        <pre><code class="language-java">public void excluirItem(Long id) throws SQLException {
+    String sql = "DELETE FROM pecas;"; // ESQUECEU O WHERE!
+    PreparedStatement stmt = conn.prepareStatement(sql);
+    stmt.executeUpdate();
+}</code></pre>
+        <p style="font-size:0.92rem; color:#334155; margin-top:10px;">Ao disparar essa rotina em produção ao clicar no botão "Remover Peça Selecionada", qual será o efeito imediato no SGBD?</p>
+        <ul class="options-list">
+            <li class="option-item" onclick="selectRadio('q3', 'a30_q3_a')">
+                <input type="radio" name="a30_q3" id="a30_q3_a">
+                <label class="option-label" for="a30_q3_a"><strong>(A)</strong> O banco lançará um <code>SQLException</code> informando que a chave primária não foi informada.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q3', 'a30_q3_b')">
+                <input type="radio" name="a30_q3" id="a30_q3_b">
+                <label class="option-label" for="a30_q3_b"><strong>(B)</strong> O SQLite apenas apagará a primeira linha da tabela, ignorando as demais.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q3', 'a30_q3_c')">
+                <input type="radio" name="a30_q3" id="a30_q3_c">
+                <label class="option-label" for="a30_q3_c"><strong>(C)</strong> O Java detecta a ausência de WHERE e interrompe o programa em tempo de compilação.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q3', 'a30_q3_d')">
+                <input type="radio" name="a30_q3" id="a30_q3_d">
+                <label class="option-label" for="a30_q3_d"><strong>(D)</strong> Todas as linhas da tabela <code>pecas</code> serão sumariamente excluídas em lote, esvaziando o estoque da empresa.</label>
+            </li>
+        </ul>
+        <div class="feedback-box" id="fb-q3"></div>
+    </div>
+
+    <!-- QUESTÃO 4 (MÚLTIPLA ESCOLHA - MVC) -->
+    <div class="question-card" id="card-q4">
+        <span class="badge-importante">⚠️ IMPORTANTE • FLUXO MVC P2</span>
+        <h3>Questão 4: O Fluxo de Dados na Arquitetura em Camadas (View $
+ightarrow$ Controller $
+ightarrow$ DAO)</h3>
+        <p style="font-size:0.95rem; color:#334155;">
+            Quando o usuário clica no botão <code>[Salvar]</code> na janela gráfica em Swing, qual é a ordem canônica e desacoplada de chamadas estabelecida pela arquitetura MVC profissional?
+        </p>
+        <ul class="options-list">
+            <li class="option-item" onclick="selectRadio('q4', 'a30_q4_a')">
+                <input type="radio" name="a30_q4" id="a30_q4_a">
+                <label class="option-label" for="a30_q4_a"><strong>(A)</strong> A View conecta diretamente no SQLite via <code>DriverManager</code> e atualiza a JTable.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q4', 'a30_q4_b')">
+                <input type="radio" name="a30_q4" id="a30_q4_b">
+                <label class="option-label" for="a30_q4_b"><strong>(B)</strong> A View coleta os textos dos campos e repassa ao Controller; o Controller valida e instancia a Entidade de Domínio; o Controller invoca o método <code>salvar</code> da Interface DAO; o DAO grava no banco via JDBC e a View apenas recarrega os dados.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q4', 'a30_q4_c')">
+                <input type="radio" name="a30_q4" id="a30_q4_c">
+                <label class="option-label" for="a30_q4_c"><strong>(C)</strong> O DAO escuta o clique do mouse no botão e avisa o banco de dados.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q4', 'a30_q4_d')">
+                <input type="radio" name="a30_q4" id="a30_q4_d">
+                <label class="option-label" for="a30_q4_d"><strong>(D)</strong> A Entidade de Domínio recebe a referência da janela gráfica e monta o comando SQL.</label>
+            </li>
+        </ul>
+        <div class="feedback-box" id="fb-q4"></div>
+    </div>
+
+    <!-- MÓDULO PRÁTICO: EDITORES INTERATIVOS DE CÓDIGO (CRUD COMPLETO) -->
+    <div class="theory-card" style="border-left-color: var(--secondary);">
+        <div class="history-tag" style="background:#ccfbf1; color:#0f766e;">Prática Interativa de Bancada</div>
+        <h2>💻 3. Laboratório StarLog Almoxarifado • Desafios de Código CRUD</h2>
+        <p>Implemente agora os métodos fundamentais de modificação, exclusão e listagem da classe <code>ProdutoDAOSqlite</code>. O avaliador fará a análise estática em tempo real para verificar se o seu código atende aos critérios da P2!</p>
+    </div>
+
+    <!-- DESAFIO DE CÓDIGO 1: atualizar -->
+    <div class="question-card" id="card-code1">
+        <span class="badge-importante">⚠️ IMPORTANTE • UPDATE WHERE P2</span>
+        <h3>Desafio de Código 1: O Método <code>atualizar(Produto produto)</code></h3>
+        <p style="font-size:0.92rem; color:#334155;">
+            Implemente a atualização no SQLite com cláusula <code>WHERE id = ?</code> estrita, configurando os parâmetros na ordem e retornando <code>boolean</code> via verificação de linhas afetadas:
+        </p>
+        
+        <div class="editor-container">
+            <div class="editor-header">
+                <span>ProdutoDAOSqlite.java • Operação Update</span>
+                <span>Java 17+</span>
+            </div>
+            <textarea class="code-input" id="code-update" style="height:210px;" spellcheck="false">@Override
+public boolean atualizar(Produto produto) {
+    String sql = "UPDATE produtos SET nome = ?, preco = ?, estoque = ? WHERE id = ?;";
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        // TODO: Configure os 4 parâmetros no stmt (1=nome, 2=preco, 3=estoque, 4=id)
+        
+        // TODO: Execute o update capturando o int linhasAfetadas
+        
+        // TODO: Retorne linhasAfetadas > 0
+        
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao atualizar produto: " + e.getMessage(), e);
+    }
+}</textarea>
+            <div class="editor-actions">
+                <button class="btn-test" onclick="validarUpdate()">⚡ Validar Implementação</button>
+                <button class="btn-reset" onclick="resetCode1()">Restaurar Código Base</button>
+            </div>
+            <div class="code-feedback" id="feedback-code1"></div>
+        </div>
+    </div>
+
+    <!-- DESAFIO DE CÓDIGO 2: excluir -->
+    <div class="question-card" id="card-code2">
+        <span class="badge-importante">⚠️ IMPORTANTE • DELETE WHERE P2</span>
+        <h3>Desafio de Código 2: O Método <code>excluir(Long id)</code></h3>
+        <p style="font-size:0.92rem; color:#334155;">
+            Implemente a remoção segura por ID utilizando <code>DELETE FROM produtos WHERE id = ?;</code> e retornando <code>true</code> se a linha foi deletada:
+        </p>
+        
+        <div class="editor-container">
+            <div class="editor-header">
+                <span>ProdutoDAOSqlite.java • Operação Delete</span>
+                <span>Java 17+</span>
+            </div>
+            <textarea class="code-input" id="code-delete" style="height:190px;" spellcheck="false">@Override
+public boolean excluir(Long id) {
+    String sql = "DELETE FROM produtos WHERE id = ?;";
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        // TODO: Configure o parâmetro 1 com stmt.setLong(1, id)
+        
+        // TODO: Execute o comando capturando linhasAfetadas
+        
+        // TODO: Retorne se linhasAfetadas > 0
+        
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao excluir produto: " + e.getMessage(), e);
+    }
+}</textarea>
+            <div class="editor-actions">
+                <button class="btn-test" onclick="validarDelete()">⚡ Validar Implementação</button>
+                <button class="btn-reset" onclick="resetCode2()">Restaurar Código Base</button>
+            </div>
+            <div class="code-feedback" id="feedback-code2"></div>
+        </div>
+    </div>
+
+    <!-- DESAFIO DE CÓDIGO 3: listarTodos -->
+    <div class="question-card" id="card-code3">
+        <span class="badge-importante">⚠️ IMPORTANTE • LISTAGEM JTABLE P2</span>
+        <h3>Desafio de Código 3: O Método <code>listarTodos()</code></h3>
+        <p style="font-size:0.92rem; color:#334155;">
+            Implemente a consulta de todos os itens ordenados por nome (para abastecer a <code>JTable</code>), delegando a criação do objeto ao método <code>mapearLinha(rs)</code>:
+        </p>
+        
+        <div class="editor-container">
+            <div class="editor-header">
+                <span>ProdutoDAOSqlite.java • Read em Lote</span>
+                <span>Java 17+</span>
+            </div>
+            <textarea class="code-input" id="code-listar" style="height:210px;" spellcheck="false">@Override
+public List<Produto> listarTodos() {
+    String sql = "SELECT id, nome, preco, estoque FROM produtos ORDER BY nome;";
+    List<Produto> lista = new ArrayList<>();
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        
+        // [ESCREVA SUA LÓGICA AQUI]:
+        // Percorra as linhas do ResultSet e hidrate os produtos chamando mapearLinha
+        // Adicione cada produto hidratado na coleção lista
+        
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao listar catálogo: " + e.getMessage(), e);
+    }
+    return lista;
+}</textarea>
+            <div class="editor-actions">
+                <button class="btn-test" onclick="validarListar()">⚡ Validar Implementação</button>
+                <button class="btn-reset" onclick="resetCode3()">Restaurar Código Base</button>
+            </div>
+            <div class="code-feedback" id="feedback-code3"></div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO DA LISTA OFICIAL (DESBLOQUEADA APÓS 7 ACERTOS) -->
+    <div id="official-task-section">
+        <span class="task-badge-unlocked">🔓 LISTA OFICIAL CRUD DESBLOQUEADA COM SUCESSO!</span>
+        <h2 style="color:var(--primary); font-size:1.5rem; margin-bottom:8px;">Missão Oficial Prática: Sistema de Almoxarifado StarLog</h2>
+        <p style="font-size:0.95rem; color:#334155;">
+            Você completou a etapa diagnóstica e destravou a Lista Oficial de Desenvolvimento! Agora abra sua IDE (VS Code / IntelliJ / Eclipse) e implemente o CRUD completo de negócio:
+        </p>
+
+        <div style="background:#f8fafc; border-radius:10px; padding:24px; margin:24px 0; border:1px solid #cbd5e1; border-left:6px solid #0d9488; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+                <h3 style="color:#0f172a; margin:0; font-size:1.15rem;">📐 Arquitetura & Especificação do Sistema Almoxarifado StarLog</h3>
+                <span style="font-size:0.75rem; background:#0d9488; color:white; padding:3px 8px; border-radius:4px; font-weight:600;">CRUD ENTERPRISE</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#475569; margin-bottom:16px;">
+                Implemente o ciclo de vida completo de persistência (Create, Read, Update, Delete) com garantia determinística de integridade relacional:
+            </p>
+
+            <!-- Grid de Requisitos Aula 30 -->
+            <div style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:20px;">
+                
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
+                    <h4 style="color:#0d9488; margin-bottom:8px; font-size:0.95rem;">1. Pacote e Entidade: <code>br.com.starlog.model.Produto</code></h4>
+                    <ul style="font-size:0.88rem; color:#334155; line-height:1.6; margin-left:18px;">
+                        <li><strong>Atributos Privados:</strong> <code>Long id</code>, <code>String nome</code>, <code>double preco</code>, <code>int estoque</code>.</li>
+                        <li><strong>Controle de Invariantes:</strong> Disparar <code>IllegalArgumentException</code> se:
+                            <br>• <code>nome</code> for nulo ou tiver menos de 3 caracteres.
+                            <br>• <code>preco</code> for menor ou igual a <code>0.0</code>.
+                            <br>• <code>estoque</code> for estritamente negativo (&lt; 0).
+                        </li>
+                        <li><strong>Construtores & Métodos:</strong> Construtor de persistência (com <code>id</code>), construtor de negócio (sem <code>id</code>), getters, <code>setId(Long id)</code>, <code>setPreco(double)</code>, <code>setEstoque(int)</code> e <code>toString()</code> formatado.</li>
+                    </ul>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
+                    <h4 style="color:#0d9488; margin-bottom:8px; font-size:0.95rem;">2. Contrato da Interface: <code>br.com.starlog.dao.ProdutoDAO</code></h4>
+                    <p style="font-size:0.88rem; color:#475569; margin-bottom:6px;">Declare as 5 assinaturas do contrato sem acoplamento a banco de dados:</p>
+                    <pre style="background:#0f172a; color:#f8fafc; padding:10px 14px; border-radius:6px; font-size:0.82rem; overflow-x:auto;"><code>public interface ProdutoDAO {
+    void salvar(Produto produto);
+    Optional&lt;Produto&gt; buscarPorId(Long id);
+    List&lt;Produto&gt; listarTodos();
+    boolean atualizar(Produto produto);
+    boolean excluir(Long id);
+}</code></pre>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
+                    <h4 style="color:#0d9488; margin-bottom:8px; font-size:0.95rem;">3. Implementação Concreta: <code>br.com.starlog.dao.ProdutoDAOSqlite</code></h4>
+                    <ul style="font-size:0.88rem; color:#334155; line-height:1.6; margin-left:18px;">
+                        <li><strong>DDL Automático:</strong> Criação da tabela <code>produtos (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, preco REAL NOT NULL, estoque INTEGER NOT NULL);</code> no construtor.</li>
+                        <li><strong>Validação de Linhas Afetadas:</strong> Tanto <code>atualizar</code> quanto <code>excluir</code> devem inspecionar <code>int afetadas = stmt.executeUpdate();</code> e retornar <code>afetadas > 0</code>, sem ignorar o retorno do driver.</li>
+                        <li><strong>Ordenação Canônica:</strong> O método <code>listarTodos()</code> deve obrigatoriamente incluir <code>ORDER BY nome ASC</code> para estabilizar a renderização na interface.</li>
+                    </ul>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
+                    <h4 style="color:#0d9488; margin-bottom:8px; font-size:0.95rem;">4. Simulação de Negócio no <code>Main.java</code> (Ciclo Completo)</h4>
+                    <ol style="font-size:0.88rem; color:#334155; line-height:1.6; margin-left:18px;">
+                        <li><strong>[Create]:</strong> Cadastre dois itens (ex: <em>"Teclado Mecânico RGB"</em> e <em>"Mousepad Speed XL"</em>). Mostre os IDs autoincrement gerados.</li>
+                        <li><strong>[Read]:</strong> Liste todos os produtos com exibição limpa em colunas no terminal.</li>
+                        <li><strong>[Update]:</strong> Altere o estoque do Teclado para 15 unidades e o preço para 289.90. Verifique se o método retornou <code>true</code> e exiba o registro atualizado.</li>
+                        <li><strong>[Delete]:</strong> Remova o Mousepad por ID. Teste a exclusão de um ID inexistente (ex: 888L) e comprove que o sistema lida com o retorno <code>false</code> amigavelmente sem travar.</li>
+                        <li><strong>[Final State]:</strong> Execute <code>listarTodos()</code> e mostre que restou exatamente 1 produto no banco.</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- COFRE CRIPTOGRÁFICO DO GABARITO OFICIAL -->
+        <div class="vault-card" id="vault-section">
+            <div class="vault-header">
+                <div class="vault-icon">🔐</div>
+                <div class="vault-title">
+                    <h3>Cofre Criptográfico: Gabarito & Código Completo da Lista</h3>
+                    <p>O gabarito canônico está blindado com <strong>AES-GCM (256 bits)</strong> via WebCrypto API.</p>
+                </div>
+            </div>
+
+            <!-- Desafio de Criptoanálise / Pistas Anti-Google -->
+            <div class="clue-badge" style="background:#0f172a; border-left:4px solid #14b8a6; color:#e2e8f0; font-family:system-ui, sans-serif;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <strong style="color:#14b8a6; font-size:0.95rem;">🕵️ Protocolo CTF: Enigma do Banco de Dados & Desafio de Força Bruta</strong>
+                    <span style="font-size:0.75rem; background:#1e293b; color:#94a3b8; border:1px solid #475569; padding:2px 8px; border-radius:12px;">Dificuldade: Média</span>
+                </div>
+                <p style="font-size:0.87rem; line-height:1.5; color:#cbd5e1; margin-bottom:10px;">
+                    A chave de descriptografia foi sintetizada para resistir a buscas na internet. Use a dedução técnica dos conceitos de banco de dados ou quebre a chave via script no console:
+                </p>
+                
+                <div style="background:#1e293b; border-radius:6px; padding:12px; margin-bottom:10px; font-size:0.83rem; line-height:1.6; border:1px solid #334155;">
+                    <span style="color:#2dd4bf; font-weight:bold;">🔍 Pistas Lógicas do Enigma:</span><br>
+                    • <strong>Tamanho:</strong> Exatamente <strong>6 caracteres</strong>, em letras minúsculas (ASCII <code>[a-z]</code>).<br>
+                    • <strong>Propriedade Semântica:</strong> É a biblioteca C de banco de dados relacional embarcada mais utilizada no planeta (usada em Android, navegadores, aviões e em nossas aulas de Java).<br>
+                    • <strong>Assinatura Criptográfica (SHA-256):</strong> O hash SHA-256 da chave termina com <code>...2e0081bf9</code>.<br>
+                    • <strong>Estrutura de Caracteres:</strong> Começa com uma consoante sibilante (<code>s</code>) e termina com a vogal <code>e</code>.
+                </div>
+
+                <div style="background:#1e293b; border-radius:6px; padding:10px; font-size:0.8rem; border-left:3px solid #14b8a6; color:#94a3b8;">
+                    💡 <strong>Desafio Hacker (Força Bruta no Console F12):</strong> Abra o Developer Tools (F12) e teste combinações de nomes de bancos de dados relacionais e SGBDs de 6 letras minúsculas comparando o hash SHA-256 até encontrar o hash exato!
+                </div>
+            </div>
+
+            <div class="unlock-form" style="margin-top:16px;">
+                <input type="text" class="unlock-input" id="pass-input" placeholder="Digite a palavra-chave de 6 letras" maxlength="20" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') unlockVault()">
+                <button class="unlock-btn" id="btn-unlock" onclick="unlockVault()">
+                    <span>🔓 Desbloquear Gabarito Oficial</span>
+                </button>
+            </div>
+
+            <div class="vault-msg" id="vault-msg"></div>
+
+            <div id="encrypted-payload" style="display:none;" data-iv="T0nYX66KhgPbX/Os" data-ct="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"></div>
+
+            <!-- Container do Gabarito Descriptografado -->
+            <div id="decrypted-container"></div>
+        </div>
+    </div>
+
+    <footer>
+        Laboratório Interativo de POO • Módulo de Persistência • UniCesumar 2026<br>
+        Ambiente 100% Autônomo e Confinado
+    </footer>
+
+</div>
+
+<!-- Prism.js Script para realce de código Java -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+
+<script>
+    // Hashes SHA-256 das alternativas corretas (Anti-Cheat / Anti-Gemini)
+    const HASH_CORRETAS = {
+        q1: '0bd81820c9f5e78b254b9de11aa1d23145ac63f2fee4dd04aa76ea699de38b61', // a30_q1_a
+        q2: '67e2b7b28eba095b3e39624182c2668f8c6fa3dc993d7370430c92cb043d2532', // a30_q2_c
+        q3: 'b9a63bd3f568dfe075a98bf98deb0bab6cc67b70a41d2a271864138eb1b179ec', // a30_q3_d
+        q4: '6fa29a4f8ee70f0a8c3236d6613f3e9e8cdd89f79ec0abe6fbf845f93b95467c'  // a30_q4_b
+    };
+
+    // Estado reativo dos 7 Itens
+    const statusItens = {
+        q1: false,
+        q2: false,
+        q3: false,
+        q4: false,
+        code1: false,
+        code2: false,
+        code3: false
+    };
+
+    async function sha256(str) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function atualizarProgresso() {
+        const total = 7;
+        const acertos = Object.values(statusItens).filter(Boolean).length;
+        const perc = Math.round((acertos / total) * 100);
+
+        const trackFill = document.getElementById('progress-fill');
+        const trackText = document.getElementById('progress-text');
+        if (trackFill) trackFill.style.width = perc + '%';
+        if (trackText) trackText.innerText = `${acertos} de ${total} Concluídos (${perc}%)`;
+
+        if (acertos === total) {
+            const taskSection = document.getElementById('official-task-section');
+            if (taskSection && taskSection.style.display !== 'block') {
+                taskSection.style.display = 'block';
+                taskSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }
+
+    async function selectRadio(qId, optId) {
+        const radio = document.getElementById(optId);
+        if (radio) radio.checked = true;
+
+        const hash = await sha256(optId);
+        const isCorrect = (hash === HASH_CORRETAS[qId]);
+
+        const card = document.getElementById('card-' + qId);
+        const fb = document.getElementById('fb-' + qId);
+
+        if (isCorrect) {
+            if (card) {
+                card.classList.add('answered-correct');
+                card.classList.remove('answered-incorrect');
+            }
+            if (fb) {
+                fb.className = 'feedback-box correct';
+                fb.innerHTML = '✔️ <strong>Resposta Exata!</strong> Você demonstrou compreensão do princípio arquitetural avaliado.';
+                fb.style.display = 'block';
+            }
+            statusItens[qId] = true;
+        } else {
+            if (card) {
+                card.classList.add('answered-incorrect');
+                card.classList.remove('answered-correct');
+            }
+            if (fb) {
+                fb.className = 'feedback-box incorrect';
+                fb.innerHTML = '❌ <strong>Alternativa Incorreta!</strong> Releia o bloco de fundamentação teórica acima e atente-se às diretrizes da Engenharia de Software.';
+                fb.style.display = 'block';
+            }
+            statusItens[qId] = false;
+        }
+        atualizarProgresso();
+    }
+
+    // Remove comentários // e /* */ para testar apenas o código executável do aluno
+    function stripComments(code) {
+        let c = code.replace(/\/\*[\s\S]*?\*\//g, '');
+        c = c.replace(/\/\/.*/g, '');
+        return c.replace(/\s+/g, ' ').trim();
+    }
+
+    // Validador Desafio 1: atualizar
+    function validarUpdate() {
+        const code = document.getElementById('code-update').value;
+        const c = stripComments(code);
+        const fb = document.getElementById('feedback-code1');
+        const card = document.getElementById('card-code1');
+
+        const hasSetString = /stmt\s*\.\s*setString\s*\(\s*1\s*,/i.test(c);
+        const hasSetDouble = /stmt\s*\.\s*setDouble\s*\(\s*2\s*,/i.test(c);
+        const hasSetInt = /stmt\s*\.\s*setInt\s*\(\s*3\s*,/i.test(c);
+        const hasSetLong = /stmt\s*\.\s*setLong\s*\(\s*4\s*,/i.test(c);
+        const hasExecUpdate = /executeUpdate\s*\(\s*\)/i.test(c);
+        const hasReturn = /(return\s+.*executeUpdate\s*\(\s*\)\s*>\s*0)|(return\s+\w+\s*>\s*0)/i.test(c);
+
+        if (hasSetString && hasSetDouble && hasSetInt && hasSetLong && hasExecUpdate && hasReturn) {
+            fb.className = 'code-feedback success';
+            fb.innerHTML = '✔️ <strong>Update Seguro e Blindado!</strong> Parâmetros associados com rigor, cláusula WHERE parametrizada e controle de linhas afetadas.';
+            fb.style.display = 'block';
+            statusItens.code1 = true;
+            if (card) {
+                card.classList.add('answered-correct');
+                card.classList.remove('answered-incorrect');
+            }
+        } else {
+            fb.className = 'code-feedback error';
+            let errs = [];
+            if (!hasSetString || !hasSetDouble || !hasSetInt || !hasSetLong) errs.push('configurar os 4 parâmetros no stmt (1=nome, 2=preco, 3=estoque, 4=id)');
+            if (!hasExecUpdate) errs.push('executar stmt.executeUpdate()');
+            if (!hasReturn) errs.push('retornar booleano linhasAfetadas > 0');
+            fb.innerHTML = '❌ <strong>Ajuste Necessário:</strong> Faltou: ' + errs.join(', ') + '.';
+            fb.style.display = 'block';
+            statusItens.code1 = false;
+            if (card) {
+                card.classList.add('answered-incorrect');
+                card.classList.remove('answered-correct');
+            }
+        }
+        atualizarProgresso();
+    }
+
+    function resetCode1() {
+        document.getElementById('code-update').value = `@Override
+public boolean atualizar(Produto produto) {
+    String sql = "UPDATE produtos SET nome = ?, preco = ?, estoque = ? WHERE id = ?;";
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        // TODO: Configure os 4 parâmetros no stmt (1=nome, 2=preco, 3=estoque, 4=id)
+        
+        // TODO: Execute o update capturando o int linhasAfetadas
+        
+        // TODO: Retorne linhasAfetadas > 0
+        
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao atualizar produto: " + e.getMessage(), e);
+    }
+}`;
+        const fb = document.getElementById('feedback-code1');
+        if (fb) {
+            fb.style.display = 'none';
+            fb.className = 'code-feedback';
+            fb.innerHTML = '';
+        }
+        const card = document.getElementById('card-code1');
+        if (card) card.classList.remove('answered-correct', 'answered-incorrect');
+        statusItens.code1 = false;
+        atualizarProgresso();
+    }
+
+    // Validador Desafio 2: excluir
+    function validarDelete() {
+        const code = document.getElementById('code-delete').value;
+        const c = stripComments(code);
+        const fb = document.getElementById('feedback-code2');
+        const card = document.getElementById('card-code2');
+
+        const hasSetLong = /stmt\s*\.\s*setLong\s*\(\s*1\s*,\s*id\s*\)/i.test(c);
+        const hasExecUpdate = /executeUpdate\s*\(\s*\)/i.test(c);
+        const hasReturn = /(return\s+.*executeUpdate\s*\(\s*\)\s*>\s*0)|(return\s+\w+\s*>\s*0)/i.test(c);
+
+        if (hasSetLong && hasExecUpdate && hasReturn) {
+            fb.className = 'code-feedback success';
+            fb.innerHTML = '✔️ <strong>Delete Cirúrgico!</strong> A cláusula WHERE id = ? está protegida por parâmetro tipado e validação de tupla removida.';
+            fb.style.display = 'block';
+            statusItens.code2 = true;
+            if (card) {
+                card.classList.add('answered-correct');
+                card.classList.remove('answered-incorrect');
+            }
+        } else {
+            fb.className = 'code-feedback error';
+            let errs = [];
+            if (!hasSetLong) errs.push('configurar o id com stmt.setLong(1, id)');
+            if (!hasExecUpdate) errs.push('executar stmt.executeUpdate()');
+            if (!hasReturn) errs.push('retornar se linhasAfetadas > 0');
+            fb.innerHTML = '❌ <strong>Falha na Validação:</strong> Faltou: ' + errs.join(', ') + '.';
+            fb.style.display = 'block';
+            statusItens.code2 = false;
+            if (card) {
+                card.classList.add('answered-incorrect');
+                card.classList.remove('answered-correct');
+            }
+        }
+        atualizarProgresso();
+    }
+
+    function resetCode2() {
+        document.getElementById('code-delete').value = `@Override
+public boolean excluir(Long id) {
+    String sql = "DELETE FROM produtos WHERE id = ?;";
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        // TODO: Configure o parâmetro 1 com stmt.setLong(1, id)
+        
+        // TODO: Execute o comando capturando linhasAfetadas
+        
+        // TODO: Retorne se linhasAfetadas > 0
+        
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao excluir produto: " + e.getMessage(), e);
+    }
+}`;
+        const fb = document.getElementById('feedback-code2');
+        if (fb) {
+            fb.style.display = 'none';
+            fb.className = 'code-feedback';
+            fb.innerHTML = '';
+        }
+        const card = document.getElementById('card-code2');
+        if (card) card.classList.remove('answered-correct', 'answered-incorrect');
+        statusItens.code2 = false;
+        atualizarProgresso();
+    }
+
+    // Validador Desafio 3: listarTodos
+    function validarListar() {
+        const code = document.getElementById('code-listar').value;
+        const c = stripComments(code);
+        const fb = document.getElementById('feedback-code3');
+        const card = document.getElementById('card-code3');
+
+        const hasWhileNext = /while\s*\(\s*rs\s*\.\s*next\s*\(\s*\)/i.test(c);
+        const hasAddMap = /(lista\s*\.\s*add\s*\(\s*mapearLinha\s*\(\s*rs\s*\)\s*\))|(mapearLinha\s*\(\s*rs\s*\)[\s\S]*?lista\s*\.\s*add\s*\()/i.test(c);
+
+        if (hasWhileNext && hasAddMap) {
+            fb.className = 'code-feedback success';
+            fb.innerHTML = '✔️ <strong>Listagem Impecável!</strong> Iteração canônica com while(rs.next()) e hidratação através do mapearLinha centralizado.';
+            fb.style.display = 'block';
+            statusItens.code3 = true;
+            if (card) {
+                card.classList.add('answered-correct');
+                card.classList.remove('answered-incorrect');
+            }
+        } else {
+            fb.className = 'code-feedback error';
+            let errs = [];
+            if (!hasWhileNext) errs.push('iterar com laço while (rs.next())');
+            if (!hasAddMap) errs.push('adicionar na lista chamando lista.add(mapearLinha(rs))');
+            fb.innerHTML = '❌ <strong>Atenção:</strong> ' + errs.join(', ') + '.';
+            fb.style.display = 'block';
+            statusItens.code3 = false;
+            if (card) {
+                card.classList.add('answered-incorrect');
+                card.classList.remove('answered-correct');
+            }
+        }
+        atualizarProgresso();
+    }
+
+    function resetCode3() {
+        document.getElementById('code-listar').value = `@Override
+public List<Produto> listarTodos() {
+    String sql = "SELECT id, nome, preco, estoque FROM produtos ORDER BY nome;";
+    List<Produto> lista = new ArrayList<>();
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        
+        // [ESCREVA SUA LÓGICA AQUI]:
+        // Percorra as linhas do ResultSet e hidrate os produtos chamando mapearLinha
+        // Adicione cada produto hidratado na coleção lista
+        
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao listar catálogo: " + e.getMessage(), e);
+    }
+    return lista;
+}`;
+        const fb = document.getElementById('feedback-code3');
+        if (fb) {
+            fb.style.display = 'none';
+            fb.className = 'code-feedback';
+            fb.innerHTML = '';
+        }
+        const card = document.getElementById('card-code3');
+        if (card) card.classList.remove('answered-correct', 'answered-incorrect');
+        statusItens.code3 = false;
+        atualizarProgresso();
+    }
+
+    // Descriptografar Gabarito Oficial da Lista (AES-GCM WebCrypto)
+    async function unlockVault() {
+        const input = document.getElementById('pass-input');
+        const decContainer = document.getElementById('decrypted-container');
+        const payloadDiv = document.getElementById('encrypted-payload');
+        const password = input.value.trim().toLowerCase();
+
+        if (!password) {
+            showVaultMsg('Por favor, digite a chave de descriptografia!', 'error');
+            return;
+        }
+
+        try {
+            const encoder = new TextEncoder();
+            const pwUtf8 = encoder.encode(password);
+            const keyHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+
+            const cryptoKey = await crypto.subtle.importKey(
+                'raw',
+                keyHash,
+                { name: 'AES-GCM' },
+                false,
+                ['decrypt']
+            );
+
+            const ivB64 = payloadDiv.getAttribute('data-iv');
+            const ctB64 = payloadDiv.getAttribute('data-ct');
+
+            const ivStr = atob(ivB64);
+            const iv = new Uint8Array(ivStr.length);
+            for (let i = 0; i < ivStr.length; i++) iv[i] = ivStr.charCodeAt(i);
+
+            const ctStr = atob(ctB64);
+            const ct = new Uint8Array(ctStr.length);
+            for (let i = 0; i < ctStr.length; i++) ct[i] = ctStr.charCodeAt(i);
+
+            const decryptedBuffer = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv },
+                cryptoKey,
+                ct
+            );
+
+            const decryptedText = new TextDecoder('utf-8').decode(decryptedBuffer);
+
+            showVaultMsg('🎉 Chave Correta! Gabarito Oficial e Código Completo da Lista Desbloqueados!', 'success');
+            renderMarkdown(decryptedText, decContainer);
+            decContainer.style.display = 'block';
+            decContainer.scrollIntoView({ behavior: 'smooth' });
+
+        } catch (err) {
+            showVaultMsg('❌ Chave Incorreta! A chave criptográfica não confere com o hash AES-GCM. Tente novamente!', 'error');
+            decContainer.style.display = 'none';
+        }
+    }
+
+    function showVaultMsg(text, type) {
+        const msg = document.getElementById('vault-msg');
+        if (msg) {
+            msg.className = `vault-msg ${type}`;
+            msg.innerText = text;
+            msg.style.display = 'block';
+        }
+    }
+
+    function renderMarkdown(md, targetEl) {
+        let html = md
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        html = html.replace(/^### (.*$)/gim, '<h3 style="color:var(--secondary); margin-top:20px;">$1</h3>');
+        html = html.replace(/^## (.*$)/gim, '<h2 style="color:var(--primary); margin-top:24px;">$1</h2>');
+        html = html.replace(/^# (.*$)/gim, '<h1 style="color:var(--primary); border-bottom:2px solid var(--border); padding-bottom:8px;">$1</h1>');
+        html = html.replace(/^---/gim, '<hr style="border:0; border-top:1px solid #cbd5e1; margin:20px 0;">');
+        html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+        
+        // Blocos de código Java
+        html = html.replace(/```java([\s\S]*?)```/gim, '<pre><code class="language-java">$1</code></pre>');
+        html = html.replace(/`([^`]+)`/gim, '<code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-family:monospace; color:#0f172a;">$1</code>');
+        html = html.replace(/^\* (.*$)/gim, '<li>$1</li>');
+        html = html.replace(/<\/li>\s*<li>/gim, '</li><li>');
+        html = html.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
+        html = html.replace(/\n\n+/gim, '</p><p>');
+
+        targetEl.innerHTML = `<p>${html}</p>`;
+        if (window.Prism) {
+            Prism.highlightAllUnder(targetEl);
+        }
+    }
+
+</script>
+
+</body>
+</html>

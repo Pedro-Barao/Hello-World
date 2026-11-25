@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório Interativo • Aula 29 | Padrão DAO & Mapeamento Objeto-Relacional</title>
+    <!-- Prism.js para Realce Sintático Elegante de Java -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #0f766e;
+            --secondary-light: #14b8a6;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #b45309;
+            --success: #15803d;
+            --danger: #b91c1c;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 24px 16px 80px 16px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        header.page-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: white;
+            padding: 32px 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .badge-institution {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        header h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        header p.subtitle {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 14px;
+        }
+
+        .meta-item strong {
+            color: #93c5fd;
+        }
+
+        /* Barra de Progresso Gamificada */
+        .progress-bar-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--secondary) 0%, var(--success) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--primary);
+            min-width: 140px;
+            text-align: right;
+        }
+
+        /* Cards Teóricos */
+        .theory-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary-light);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .theory-card h2 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analogy-box {
+            background: #eff6ff;
+            border: 1px dashed #93c5fd;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.92rem;
+            color: #1e3a8a;
+        }
+
+        .history-tag {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Questões */
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .question-card.answered-correct {
+            border-color: #86efac;
+            background: #f0fdf4;
+        }
+
+        .question-card.answered-incorrect {
+            border-color: #fca5a5;
+            background: #fef2f2;
+        }
+
+        /* Etiqueta IMPORTANTE solicitada */
+        .badge-importante {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .question-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.15s ease;
+        }
+
+        .option-item:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .option-item input[type="radio"] {
+            margin-top: 4px;
+            cursor: pointer;
+        }
+
+        .option-label {
+            font-size: 0.92rem;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .feedback-box {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            display: none;
+        }
+
+        .feedback-box.correct {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            display: block;
+        }
+
+        .feedback-box.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
+        /* Editor Interativo de Código */
+        .editor-container {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 14px;
+            border: 1px solid #334155;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        .code-input {
+            width: 100%;
+            height: 175px;
+            background: #020617;
+            color: #f1f5f9;
+            font-family: "Fira Code", "Courier New", Courier, monospace;
+            font-size: 0.9rem;
+            padding: 12px;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            resize: vertical;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        .code-input:focus {
+            border-color: var(--primary-light);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-test {
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .btn-test:hover {
+            background: var(--primary);
+        }
+
+        .btn-reset {
+            background: #334155;
+            color: #cbd5e1;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .code-feedback {
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .code-feedback.success {
+            background: #064e3b;
+            color: #6ee7b7;
+            border: 1px solid #059669;
+            display: block;
+        }
+
+        .code-feedback.error {
+            background: #450a0a;
+            color: #fca5a5;
+            border: 1px solid #dc2626;
+            display: block;
+        }
+
+        /* Seção da Lista Oficial Desbloqueada */
+        #official-task-section {
+            display: none;
+            margin-top: 36px;
+            background: #ffffff;
+            border: 2px solid var(--secondary);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.15);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-badge-unlocked {
+            background: #ccfbf1;
+            color: #0f766e;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        /* Cofre Criptográfico */
+        .vault-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-top: 30px;
+            border: 1px solid #334155;
+        }
+
+        .vault-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .vault-icon {
+            font-size: 2.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 50%;
+        }
+
+        .vault-title h3 {
+            font-size: 1.3rem;
+            color: #f8fafc;
+        }
+
+        .vault-title p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .clue-badge {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 18px;
+        }
+
+        .unlock-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .unlock-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: #020617;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-family: monospace;
+            outline: none;
+        }
+
+        .unlock-input:focus {
+            border-color: #38bdf8;
+        }
+
+        .unlock-btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .unlock-btn:hover {
+            background: #0369a1;
+        }
+
+        .vault-msg {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .vault-msg.success {
+            background: rgba(22, 163, 74, 0.2);
+            border: 1px solid #22c55e;
+            color: #86efac;
+            display: block;
+        }
+
+        .vault-msg.error {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            display: block;
+        }
+
+        #decrypted-container {
+            display: none;
+            margin-top: 24px;
+            background: #ffffff;
+            color: #1e293b;
+            padding: 28px;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            border: 1px solid #e2e8f0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header class="page-header">
+        <div class="badge-institution">UniCesumar • Engenharia de Software & ADS</div>
+        <h1>Laboratório Interativo • Aula 29</h1>
+        <p class="subtitle">Padrão DAO (Data Access Object), Inversão de Dependência e Mapeamento Objeto-Relacional</p>
+        <div class="header-meta">
+            <div class="meta-item">Docente: <strong>Prof. Me. Júlio B. Herculani</strong></div>
+            <div class="meta-item">Ambiente: <strong>Offline / Standalone</strong></div>
+            <div class="meta-item">Modo: <strong>Autoaprendizagem Prática Ativa</strong></div>
+            <div class="meta-item">Foco P2: <strong>Arquitetura em Camadas & Contratos DAO</strong></div>
+        </div>
+    </header>
+
+    <!-- Barra de Progresso -->
+    <div class="progress-bar-container">
+        <span style="font-size:0.9rem; font-weight:600; color:#334155;">Progresso para Desbloquear a Lista:</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0 de 7 Concluídos</div>
+    </div>
+
+    <!-- MÓDULO TEÓRICO 1: O PROBLEMA HISTÓRICO -->
+    <div class="theory-card">
+        <div class="history-tag">Fundamentação Histórica • 1970 vs 1990</div>
+        <h2>🏛️ 1. O Abismo entre Dois Mundos (O Impedance Mismatch)</h2>
+        <p>No início da computação corporativa, <strong>Edgar F. Codd (IBM, 1970)</strong> formalizou o Modelo Relacional. O banco de dados pensa exclusivamente em tabelas bidimensionais, tuplas de dados primitivos escalares e integridade relacional via chaves primárias (PK).</p>
+        <p style="margin-top:8px;">Já a Orientação a Objetos de <strong>Alan Kay</strong> pensa em entidades vivas na memória RAM: encapsulamento, comportamentos (métodos), herança polimórfica e ponteiros de referência (identidade de Heap via <code>obj1 == obj2</code>). Ted Neward denominou essa barreira de <em>"O Vietnã da Computação"</em>.</p>
+        
+        <div class="analogy-box">
+            <strong>🎭 Metáfora Lúdica do Tradutor Juramentado:</strong><br>
+            A classe de negócio em Java é um diplomata que só fala português culto (regras de validação). O banco de dados é um diplomata que só fala dialeto SQL antigo. O <strong>Padrão DAO</strong> é o tradutor juramentado no meio da mesa: ele recebe comandos do Java e gera SQL seguro; quando o banco entrega uma pasta com fichas soltas (<code>ResultSet</code>), o DAO hidrata e monta o objeto Java na memória.
+        </div>
+    </div>
+
+    <!-- QUESTÃO 1 (MÚLTIPLA ESCOLHA) -->
+    <div class="question-card" id="card-q1">
+        <span class="badge-importante">⚠️ IMPORTANTE • CONCEITO P2</span>
+        <h3>Questão 1: A Natureza do Descompasso Objeto-Relacional</h3>
+        <p style="font-size:0.95rem; color:#334155;">
+            Em sistemas corporativos em Java, desenvolvedores frequentemente enfrentam o problema conhecido como <em>Impedance Mismatch</em>. Assinale a afirmativa que define corretamente a raiz desse descompasso arquitetural:
+        </p>
+        <ul class="options-list">
+            <li class="option-item" onclick="selectRadio('q1', 'q1_a')">
+                <input type="radio" name="q1" id="q1_a">
+                <label class="option-label" for="q1_a"><strong>(A)</strong> Decorre da lentidão dos discos rígidos em ler conexões via porta TCP do JDBC.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q1', 'q1_b')">
+                <input type="radio" name="q1" id="q1_b">
+                <label class="option-label" for="q1_b"><strong>(B)</strong> Resulta da assimetria entre grafos de objetos ricos na RAM (comportamento e encapsulamento) e tabelas relacionais de dados atômicos no disco (tuplas e chaves primárias).</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q1', 'q1_c')">
+                <input type="radio" name="q1" id="q1_c">
+                <label class="option-label" for="q1_c"><strong>(C)</strong> Ocorre quando o driver SQLite não consegue interpretar a instrução <code>AUTOINCREMENT</code> da tabela.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q1', 'q1_d')">
+                <input type="radio" name="q1" id="q1_d">
+                <label class="option-label" for="q1_d"><strong>(D)</strong> Refere-se à obrigatoriedade de usar exclusivamente coleções do tipo <code>Vector</code> em vez de <code>List</code>.</label>
+            </li>
+        </ul>
+        <div class="feedback-box" id="fb-q1"></div>
+    </div>
+
+    <!-- MÓDULO TEÓRICO 2: O ANTI-PATTERN DE INFRAESTRUTURA NO DOMÍNIO -->
+    <div class="theory-card">
+        <div class="history-tag">Catálogo Core J2EE • Sun Microsystems (2001)</div>
+        <h2>🚫 2. O Pecado Original: Misturar Regra de Negócio com SQL</h2>
+        <p>Em 2001, a Sun Microsystems publicou o catálogo <em>Core J2EE Patterns</em>. O erro mais amador de um programador é colocar comandos JDBC (<code>Connection</code>, <code>PreparedStatement</code>) dentro das entidades de domínio ou nos botões de telas Swing.</p>
+        <p style="margin-top:8px;">Se você coloca um <code>INSERT</code> dentro de <code>Produto.java</code>, a classe ganha duas razões para mudar (violando o <strong>SRP - Single Responsibility Principle</strong>): muda se as regras financeiras mudarem e muda se a empresa trocar o SQLite pelo PostgreSQL!</p>
+        
+        <div class="analogy-box">
+            <strong>🎮 Metáfora do Controle Remoto Universal (Interfaces):</strong><br>
+            A <strong>Interface DAO</strong> funciona exatamente como o controle remoto da sua sala: tem botões bem definidos como <code>salvar(Cliente)</code> e <code>buscarPorId(Long)</code>. O seu Controller aperta esses botões sem precisar saber se a TV é Samsung, LG ou Philips (SQLite, PostgreSQL ou Mock em memória).
+        </div>
+    </div>
+
+    <!-- QUESTÃO 2 (MÚLTIPLA ESCOLHA) -->
+    <div class="question-card" id="card-q2">
+        <span class="badge-importante">⚠️ IMPORTANTE • ANTI-PATTERN P2</span>
+        <h3>Questão 2: Violação do Princípio da Responsabilidade Única (SRP)</h3>
+        <p style="font-size:0.95rem; color:#334155;">
+            Analise o trecho de código abaixo retirado de uma aplicação iniciante:
+        </p>
+        <pre><code class="language-java">public class Produto {
+    private String nome;
+    private double preco;
+    
+    public void aplicarDesconto(double perc) { 
+        this.preco -= this.preco * perc; 
+    }
+    
+    public void persistirNoBanco() { // VIOLAÇÃO GRAVE!
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:loja.db");
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO produtos VALUES (?, ?)");
+        // ...
+    }
+}</code></pre>
+        <p style="font-size:0.92rem; color:#334155; margin-top:10px;">Sob a ótica de Clean Code e Arquitetura em Camadas, por que essa estrutura é reprovada na Engenharia de Software?</p>
+        <ul class="options-list">
+            <li class="option-item" onclick="selectRadio('q2', 'q2_a')">
+                <input type="radio" name="q2" id="q2_a">
+                <label class="option-label" for="q2_a"><strong>(A)</strong> Porque a classe deveria ter herdado de <code>Thread</code> para executar o INSERT em segundo plano.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q2', 'q2_b')">
+                <input type="radio" name="q2" id="q2_b">
+                <label class="option-label" for="q2_b"><strong>(B)</strong> Porque o método <code>aplicarDesconto</code> deveria obrigatoriamente estar dentro do banco de dados como uma Trigger.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q2', 'q2_c')">
+                <input type="radio" name="q2" id="q2_c">
+                <label class="option-label" for="q2_c"><strong>(C)</strong> Porque acopla o Domínio de Negócio diretamente a detalhes de infraestrutura (JDBC), ferindo o SRP e impedindo testes unitários herméticos sem banco ativo.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q2', 'q2_d')">
+                <input type="radio" name="q2" id="q2_d">
+                <label class="option-label" for="q2_d"><strong>(D)</strong> Porque o Java proíbe a instanciação de <code>DriverManager</code> dentro de métodos com modificador <code>public</code>.</label>
+            </li>
+        </ul>
+        <div class="feedback-box" id="fb-q2"></div>
+    </div>
+
+    <!-- QUESTÃO 3 (MÚLTIPLA ESCOLHA - INTERFACES & DIP) -->
+    <div class="question-card" id="card-q3">
+        <span class="badge-importante">⚠️ IMPORTANTE • CONTRATO P2</span>
+        <h3>Questão 3: Inversão de Dependência (DIP - SOLID) com Interfaces DAO</h3>
+        <p style="font-size:0.95rem; color:#334155;">
+            Em um projeto profissional orientado a objetos, a camada de Controller declara sua dependência da seguinte forma:
+        </p>
+        <pre><code class="language-java">public class LivroController {
+    // Declara a dependência pela INTERFACE PURA (DIP):
+    private final LivroDAO dao;
+    
+    public LivroController(LivroDAO dao) {
+        this.dao = dao;
+    }
+}</code></pre>
+        <p style="font-size:0.92rem; color:#334155; margin-top:10px;">Qual o ganho arquitetural obtido com essa injeção de dependência baseada em contrato?</p>
+        <ul class="options-list">
+            <li class="option-item" onclick="selectRadio('q3', 'q3_a')">
+                <input type="radio" name="q3" id="q3_a">
+                <label class="option-label" for="q3_a"><strong>(A)</strong> Desacoplamento total: a camada de controle opera sobre o contrato, permitindo alternar entre SQLite, PostgreSQL ou um Mock em memória sem alterar nenhuma linha da regra de negócio.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q3', 'q3_b')">
+                <input type="radio" name="q3" id="q3_b">
+                <label class="option-label" for="q3_b"><strong>(B)</strong> Aumento de velocidade de conexão através do cache automático embutido na palavra-chave <code>interface</code>.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q3', 'q3_c')">
+                <input type="radio" name="q3" id="q3_c">
+                <label class="option-label" for="q3_c"><strong>(C)</strong> O Java compila a interface diretamente para código assembly do processador.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q3', 'q3_d')">
+                <input type="radio" name="q3" id="q3_d">
+                <label class="option-label" for="q3_d"><strong>(D)</strong> A dispensa automática do comando <code>commit()</code> em bancos relacionais.</label>
+            </li>
+        </ul>
+        <div class="feedback-box" id="fb-q3"></div>
+    </div>
+
+    <!-- QUESTÃO 4 (MÚLTIPLA ESCOLHA - OPTIONAL) -->
+    <div class="question-card" id="card-q4">
+        <span class="badge-importante">⚠️ IMPORTANTE • OPTIONAL P2</span>
+        <h3>Questão 4: A Erradicação do NullPointerException com Java 8+ Optional</h3>
+        <p style="font-size:0.95rem; color:#334155;">
+            Ao consultar um registro pelo ID no banco de dados (ex.: <code>buscarPorId(999L)</code>) e o registro não existir na tabela, qual a razão técnica para a assinatura do método retornar <code>Optional&lt;Livro&gt;</code> em vez de simplesmente <code>Livro</code> (com valor <code>null</code>)?
+        </p>
+        <ul class="options-list">
+            <li class="option-item" onclick="selectRadio('q4', 'q4_a')">
+                <input type="radio" name="q4" id="q4_a">
+                <label class="option-label" for="q4_a"><strong>(A)</strong> O tipo <code>Optional</code> ocupa menos bytes na memória Heap do que a referência <code>null</code>.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q4', 'q4_b')">
+                <input type="radio" name="q4" id="q4_b">
+                <label class="option-label" for="q4_b"><strong>(B)</strong> O SQLite rejeita comandos SELECT cujo retorno resulte no ponteiro <code>null</code> da JVM.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q4', 'q4_c')">
+                <input type="radio" name="q4" id="q4_c">
+                <label class="option-label" for="q4_c"><strong>(C)</strong> Retornar <code>null</code> obriga a classe DAO a ser declarada como <code>abstract</code>.</label>
+            </li>
+            <li class="option-item" onclick="selectRadio('q4', 'q4_d')">
+                <input type="radio" name="q4" id="q4_d">
+                <label class="option-label" for="q4_d"><strong>(D)</strong> O <code>Optional</code> explicita semanticamente que o resultado pode estar ausente, obrigando o cliente chamador a tratar a presença/ausência de forma segura e erradicando o <code>NullPointerException</code> acidental.</label>
+            </li>
+        </ul>
+        <div class="feedback-box" id="fb-q4"></div>
+    </div>
+
+    <!-- MÓDULO PRÁTICO: EDITORES INTERATIVOS DE CÓDIGO (VALORES DE BANCADA) -->
+    <div class="theory-card" style="border-left-color: var(--secondary);">
+        <div class="history-tag" style="background:#ccfbf1; color:#0f766e;">Prática Interativa de Bancada</div>
+        <h2>💻 3. Laboratório StarLog BookStore • Desafios de Código</h2>
+        <p>Abaixo você irá implementar os três métodos essenciais da classe <code>LivroDAOSqlite</code>. O avaliador automático do laboratório verificará em tempo real a integridade da sua sintaxe, o uso de boas práticas do JDBC e a ausência de vulnerabilidades de segurança!</p>
+    </div>
+
+    <!-- DESAFIO DE CÓDIGO 1: mapearLinha -->
+    <div class="question-card" id="card-code1">
+        <span class="badge-importante">⚠️ IMPORTANTE • MAPEAMENTO P2</span>
+        <h3>Desafio de Código 1: O Método Centralizador <code>mapearLinha(ResultSet rs)</code></h3>
+        <p style="font-size:0.92rem; color:#334155;">
+            Implemente o método auxiliar privado que recebe a linha atual do <code>ResultSet</code> e transforma nos 4 atributos do <code>new Livro(id, titulo, autor, preco)</code>:
+        </p>
+        
+        <div class="editor-container">
+            <div class="editor-header">
+                <span>LivroDAOSqlite.java • Editor Interativo</span>
+                <span>Java 17+</span>
+            </div>
+            <textarea class="code-input" id="code-mapear" spellcheck="false">// Complete a implementação do método abaixo:
+private Livro mapearLinha(ResultSet rs) throws SQLException {
+    Long id = rs.getLong("id");
+    // TODO: Extraia titulo (String), autor (String) e preco (double)
+    
+    // TODO: Retorne a instância completa de Livro
+    
+}</textarea>
+            <div class="editor-actions">
+                <button class="btn-test" onclick="validarMapearLinha()">⚡ Validar Implementação</button>
+                <button class="btn-reset" onclick="resetCode1()">Restaurar Código Base</button>
+            </div>
+            <div class="code-feedback" id="feedback-code1"></div>
+        </div>
+    </div>
+
+    <!-- DESAFIO DE CÓDIGO 2: salvar com chaves geradas -->
+    <div class="question-card" id="card-code2">
+        <span class="badge-importante">⚠️ IMPORTANTE • INSERT/ID P2</span>
+        <h3>Desafio de Código 2: O Método <code>salvar(Livro livro)</code> com Resgate do ID</h3>
+        <p style="font-size:0.92rem; color:#334155;">
+            Implemente a operação de inserção utilizando <code>PreparedStatement</code> seguro com parâmetros <code>?</code> e a captura de chave gerada via <code>Statement.RETURN_GENERATED_KEYS</code>:
+        </p>
+        
+        <div class="editor-container">
+            <div class="editor-header">
+                <span>LivroDAOSqlite.java • Create com Chave Primária</span>
+                <span>Java 17+</span>
+            </div>
+            <textarea class="code-input" id="code-salvar" style="height:210px;" spellcheck="false">@Override
+public void salvar(Livro livro) {
+    String sql = "INSERT INTO livros (titulo, autor, preco) VALUES (?, ?, ?);";
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        
+        // TODO: Configure os 3 parâmetros tipados (setString, setDouble)
+        
+        // TODO: Execute a atualização no banco (executeUpdate)
+        
+        // TODO: Capture a chave gerada com stmt.getGeneratedKeys() e faça livro.setId(...)
+        
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao salvar livro: " + e.getMessage(), e);
+    }
+}</textarea>
+            <div class="editor-actions">
+                <button class="btn-test" onclick="validarSalvar()">⚡ Validar Implementação</button>
+                <button class="btn-reset" onclick="resetCode2()">Restaurar Código Base</button>
+            </div>
+            <div class="code-feedback" id="feedback-code2"></div>
+        </div>
+    </div>
+
+    <!-- DESAFIO DE CÓDIGO 3: buscarPorId com Optional -->
+    <div class="question-card" id="card-code3">
+        <span class="badge-importante">⚠️ IMPORTANTE • BUSCA/OPTIONAL P2</span>
+        <h3>Desafio de Código 3: O Método <code>buscarPorId(Long id)</code> com <code>Optional</code></h3>
+        <p style="font-size:0.92rem; color:#334155;">
+            Implemente a consulta pontual por ID reaproveitando o método <code>mapearLinha(rs)</code> e encapsulando o resultado em <code>Optional.of(...)</code> ou <code>Optional.empty()</code>:
+        </p>
+        
+        <div class="editor-container">
+            <div class="editor-header">
+                <span>LivroDAOSqlite.java • Read Pontual Seguro</span>
+                <span>Java 17+</span>
+            </div>
+            <textarea class="code-input" id="code-buscar" style="height:200px;" spellcheck="false">@Override
+public Optional<Livro> buscarPorId(Long id) {
+    String sql = "SELECT id, titulo, autor, preco FROM livros WHERE id = ?;";
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setLong(1, id);
+        try (ResultSet rs = stmt.executeQuery()) {
+            // [ESCREVA SUA LÓGICA AQUI]:
+            // Se houver registro, retorne o Livro encapsulado na caixinha Optional
+            // Se o SELECT não encontrou nada, retorne a caixinha vazia
+            
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao consultar livro por ID: " + e.getMessage(), e);
+    }
+}</textarea>
+            <div class="editor-actions">
+                <button class="btn-test" onclick="validarBuscar()">⚡ Validar Implementação</button>
+                <button class="btn-reset" onclick="resetCode3()">Restaurar Código Base</button>
+            </div>
+            <div class="code-feedback" id="feedback-code3"></div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO DA LISTA OFICIAL (DESBLOQUEADA APÓS 7 ACERTOS) -->
+    <div id="official-task-section">
+        <span class="task-badge-unlocked">🔓 LISTA OFICIAL DESBLOQUEADA COM SUCESSO!</span>
+        <h2 style="color:var(--primary); font-size:1.5rem; margin-bottom:8px;">Missão Oficial Prática: Catálogo BookStore Enterprise</h2>
+        <p style="font-size:0.95rem; color:#334155;">
+            Você completou a etapa diagnóstica e destravou a Lista Oficial de Desenvolvimento! Agora abra sua IDE (VS Code / IntelliJ / Eclipse) e implemente o sistema de ponta a ponta:
+        </p>
+
+        <div style="background:#f8fafc; border-radius:10px; padding:24px; margin:24px 0; border:1px solid #cbd5e1; border-left:6px solid var(--primary); box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+                <h3 style="color:#0f172a; margin:0; font-size:1.15rem;">📐 Arquitetura & Especificação Detalhada do Projeto</h3>
+                <span style="font-size:0.75rem; background:#0284c7; color:white; padding:3px 8px; border-radius:4px; font-weight:600;">PADRÃO ENTERPRISE</span>
+            </div>
+
+            <p style="font-size:0.92rem; color:#475569; margin-bottom:16px;">
+                Implemente o projeto modular seguindo rigorosamente a separação de responsabilidades (Clean Architecture / MVC):
+            </p>
+
+            <!-- Grid de Requisitos -->
+            <div style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:20px;">
+                
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
+                    <h4 style="color:#0284c7; margin-bottom:8px; font-size:0.95rem;">1. Pacote e Modelo: <code>br.com.bookstore.model.Livro</code></h4>
+                    <ul style="font-size:0.88rem; color:#334155; line-height:1.6; margin-left:18px;">
+                        <li><strong>Atributos Privados:</strong> <code>Long id</code>, <code>String titulo</code>, <code>String autor</code>, <code>double preco</code>.</li>
+                        <li><strong>Dois Construtores:</strong> 
+                            <br>• Construtor Completo: <code>(Long id, String titulo, String autor, double preco)</code> — usado para hidratar tuplas do banco.
+                            <br>• Construtor de Negócio: <code>(String titulo, String autor, double preco)</code> — atribui <code>null</code> ao <code>id</code>.
+                        </li>
+                        <li><strong>Blindagem de Invariantes de Domínio:</strong> O construtor DEVE validar e disparar <code>IllegalArgumentException</code> caso:
+                            <br>• <code>titulo</code> seja nulo ou vazio (comprimento &lt; 2 caracteres após <code>trim()</code>).
+                            <br>• <code>autor</code> seja nulo ou vazio.
+                            <br>• <code>preco</code> seja menor ou igual a <code>0.0</code> ("O preço de venda deve ser estritamente positivo").
+                        </li>
+                        <li><strong>Métodos:</strong> Getters completos, <code>setId(Long id)</code> (único setter permitido para sincronizar PK gerada) e <code>toString()</code> formatado.</li>
+                    </ul>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
+                    <h4 style="color:#0284c7; margin-bottom:8px; font-size:0.95rem;">2. Contrato da Interface: <code>br.com.bookstore.dao.LivroDAO</code></h4>
+                    <p style="font-size:0.88rem; color:#475569; margin-bottom:6px;">A camada de negócio não pode conhecer JDBC. Declare o contrato desacoplado:</p>
+                    <pre style="background:#0f172a; color:#f8fafc; padding:10px 14px; border-radius:6px; font-size:0.82rem; overflow-x:auto;"><code>public interface LivroDAO {
+    void salvar(Livro livro);
+    Optional&lt;Livro&gt; buscarPorId(Long id);
+    List&lt;Livro&gt; listarTodos();
+}</code></pre>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
+                    <h4 style="color:#0284c7; margin-bottom:8px; font-size:0.95rem;">3. Infraestrutura SQLite: <code>br.com.bookstore.dao.LivroDAOSqlite</code></h4>
+                    <ul style="font-size:0.88rem; color:#334155; line-height:1.6; margin-left:18px;">
+                        <li><strong>Inicialização Determinística:</strong> No construtor da classe DAO, execute um <code>CREATE TABLE IF NOT EXISTS livros (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT NOT NULL, autor TEXT NOT NULL, preco REAL NOT NULL);</code>.</li>
+                        <li><strong>Gerenciamento de Recursos:</strong> Todo método deve usar <code>try-with-resources</code> para fechar <code>Connection</code>, <code>PreparedStatement</code> e <code>ResultSet</code> sem vazamentos.</li>
+                        <li><strong>Captura do ID Autoincrement:</strong> No <code>salvar</code>, utilize <code>Statement.RETURN_GENERATED_KEYS</code> e atribua o ID com <code>livro.setId(...)</code>.</li>
+                        <li><strong>Mapeamento Centralizado:</strong> Isole a extração das colunas em <code>private Livro mapearLinha(ResultSet rs)</code> para evitar duplicação de código.</li>
+                    </ul>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:16px;">
+                    <h4 style="color:#0284c7; margin-bottom:8px; font-size:0.95rem;">4. Roteiro Canônico de Testes no <code>Main.java</code></h4>
+                    <ol style="font-size:0.88rem; color:#334155; line-height:1.6; margin-left:18px;">
+                        <li>Instancie <code>LivroDAO dao = new LivroDAOSqlite();</code> (aplicando DIP / Inversão de Dependência).</li>
+                        <li>Persista 3 obras literárias (ex: <em>"Clean Code"</em>, <em>"Design Patterns"</em>, <em>"Refactoring"</em>) com autores e preços distintos. Verifique no console se os IDs 1, 2 e 3 foram gerados.</li>
+                        <li>Consulte o livro de ID 2. Utilize o método funcional <code>buscarPorId(2L).ifPresentOrElse(...)</code> para imprimir os dados completos ou emitir aviso amigável.</li>
+                        <li>Consulte um ID inexistente (ex: 999L) e demonstre que a aplicação não estoura <code>NullPointerException</code>.</li>
+                        <li>Chame <code>listarTodos()</code> e imprima os registros formatados com cabeçalho tabular.</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- COFRE CRIPTOGRÁFICO DO GABARITO OFICIAL -->
+        <div class="vault-card" id="vault-section">
+            <div class="vault-header">
+                <div class="vault-icon">🔐</div>
+                <div class="vault-title">
+                    <h3>Cofre Criptográfico: Gabarito & Código Completo da Lista</h3>
+                    <p>O gabarito canônico está blindado com <strong>AES-GCM (256 bits)</strong> via WebCrypto API.</p>
+                </div>
+            </div>
+
+            <!-- Desafio de Criptoanálise / Pistas Anti-Google -->
+            <div class="clue-badge" style="background:#0f172a; border-left:4px solid #38bdf8; color:#e2e8f0; font-family:system-ui, sans-serif;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <strong style="color:#38bdf8; font-size:0.95rem;">🕵️ Protocolo CTF: Enigma Arquitetural & Desafio de Força Bruta</strong>
+                    <span style="font-size:0.75rem; background:#1e293b; color:#94a3b8; border:1px solid #475569; padding:2px 8px; border-radius:12px;">Dificuldade: Média</span>
+                </div>
+                <p style="font-size:0.87rem; line-height:1.5; color:#cbd5e1; margin-bottom:10px;">
+                    Para impedir que IAs ou buscas rápidas revelem a chave, a senha é protegida por propriedades criptográficas e estruturais. Você pode descobrir por dedução conceitual ou rodar um ataque de força bruta via script no console:
+                </p>
+                
+                <div style="background:#1e293b; border-radius:6px; padding:12px; margin-bottom:10px; font-size:0.83rem; line-height:1.6; border:1px solid #334155;">
+                    <span style="color:#fbbf24; font-weight:bold;">🔍 Pistas Lógicas do Enigma:</span><br>
+                    • <strong>Tamanho:</strong> Exatamente <strong>7 caracteres</strong>, em letras minúsculas (ASCII <code>[a-z]</code>).<br>
+                    • <strong>Assinatura Criptográfica (SHA-256):</strong> O hash SHA-256 da chave termina com <code>...d774900a6</code>.<br>
+                    • <strong>Estrutura de Caracteres:</strong> A primeira letra é uma vogal e a última letra é uma consoante líquida vibrante (<code>r</code>).
+                </div>
+
+                <div style="background:#1e293b; border-radius:6px; padding:10px; font-size:0.8rem; border-left:3px solid #10b981; color:#94a3b8;">
+                    💡 <strong>Desafio Hacker (Força Bruta no Console F12):</strong> Se você for programador raiz, abra o console do navegador e execute um script em JavaScript que itere sobre palavras em minúsculo chamando <code>crypto.subtle.digest('SHA-256', ...)</code> até achar o hash cujo final confira!
+                </div>
+            </div>
+
+            <div class="unlock-form" style="margin-top:16px;">
+                <input type="text" class="unlock-input" id="pass-input" placeholder="Digite a palavra-chave de 7 letras" maxlength="20" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') unlockVault()">
+                <button class="unlock-btn" id="btn-unlock" onclick="unlockVault()">
+                    <span>🔓 Desbloquear Gabarito Oficial</span>
+                </button>
+            </div>
+
+            <div class="vault-msg" id="vault-msg"></div>
+
+            <div id="encrypted-payload" style="display:none;" data-iv="G4WbLxGbffPFMGdB" data-ct="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"></div>
+
+            <!-- Container do Gabarito Descriptografado -->
+            <div id="decrypted-container"></div>
+        </div>
+    </div>
+
+    <footer>
+        Laboratório Interativo de POO • Módulo de Persistência • UniCesumar 2026<br>
+        Ambiente 100% Autônomo e Confinado
+    </footer>
+
+</div>
+
+<!-- Prism.js Script para realce de código Java -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+
+<script>
+    // Hashes SHA-256 das alternativas corretas (Anti-Cheat / Anti-Gemini)
+    const HASH_CORRETAS = {
+        q1: '045409afe80dcdf20f0dfe6614c092afed1167012b0deba4d629c5cd3e0c2589', // q1_b
+        q2: 'dc83d9010371ea2a3d389147a0d7644eeb110aa4970f5148d42045913e4ecfaf', // q2_c
+        q3: '3512e5d8456c49c1a3143756215eb3b772f2e8b21a5f1237785f172d829316c5', // q3_a
+        q4: '23e74d262d921ef1f2366f7d4361a4a5c3da376b87fd5d508024b253f8d9e6c6'  // q4_d
+    };
+
+    // Estado reativo dos 7 Itens
+    const statusItens = {
+        q1: false,
+        q2: false,
+        q3: false,
+        q4: false,
+        code1: false,
+        code2: false,
+        code3: false
+    };
+
+    async function sha256(str) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function atualizarProgresso() {
+        const total = 7;
+        const acertos = Object.values(statusItens).filter(Boolean).length;
+        const perc = Math.round((acertos / total) * 100);
+
+        const trackFill = document.getElementById('progress-fill');
+        const trackText = document.getElementById('progress-text');
+        if (trackFill) trackFill.style.width = perc + '%';
+        if (trackText) trackText.innerText = `${acertos} de ${total} Concluídos (${perc}%)`;
+
+        if (acertos === total) {
+            const taskSection = document.getElementById('official-task-section');
+            if (taskSection && taskSection.style.display !== 'block') {
+                taskSection.style.display = 'block';
+                taskSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }
+
+    async function selectRadio(qId, optId) {
+        const radio = document.getElementById(optId);
+        if (radio) radio.checked = true;
+
+        const hash = await sha256(optId);
+        const isCorrect = (hash === HASH_CORRETAS[qId]);
+
+        const card = document.getElementById('card-' + qId);
+        const fb = document.getElementById('fb-' + qId);
+
+        if (isCorrect) {
+            if (card) {
+                card.classList.add('answered-correct');
+                card.classList.remove('answered-incorrect');
+            }
+            if (fb) {
+                fb.className = 'feedback-box correct';
+                fb.innerHTML = '✔️ <strong>Resposta Exata!</strong> Você demonstrou compreensão do princípio arquitetural avaliado.';
+                fb.style.display = 'block';
+            }
+            statusItens[qId] = true;
+        } else {
+            if (card) {
+                card.classList.add('answered-incorrect');
+                card.classList.remove('answered-correct');
+            }
+            if (fb) {
+                fb.className = 'feedback-box incorrect';
+                fb.innerHTML = '❌ <strong>Alternativa Incorreta!</strong> Releia o bloco de fundamentação teórica acima e atente-se às diretrizes de POO.';
+                fb.style.display = 'block';
+            }
+            statusItens[qId] = false;
+        }
+        atualizarProgresso();
+    }
+
+    // Remove comentários // e /* */ para testar apenas o código executável do aluno
+    function stripComments(code) {
+        let c = code.replace(/\/\*[\s\S]*?\*\//g, '');
+        c = c.replace(/\/\/.*/g, '');
+        return c.replace(/\s+/g, ' ').trim();
+    }
+
+    // Validador Desafio 1: mapearLinha
+    function validarMapearLinha() {
+        const code = document.getElementById('code-mapear').value;
+        const c = stripComments(code);
+        const fb = document.getElementById('feedback-code1');
+        const card = document.getElementById('card-code1');
+
+        const hasGetTitulo = /rs\s*\.\s*getString\s*\(\s*["']titulo["']\s*\)/i.test(c);
+        const hasGetAutor = /rs\s*\.\s*getString\s*\(\s*["']autor["']\s*\)/i.test(c);
+        const hasGetPreco = /rs\s*\.\s*getDouble\s*\(\s*["']preco["']\s*\)/i.test(c);
+        const hasReturn = /return\s+new\s+Livro\s*\(/i.test(c);
+
+        if (hasGetTitulo && hasGetAutor && hasGetPreco && hasReturn) {
+            fb.className = 'code-feedback success';
+            fb.innerHTML = '✔️ <strong>Implementação Perfeita!</strong> O mapeador extrai as colunas com tipagem estrita e devolve a entidade completa via construtor.';
+            fb.style.display = 'block';
+            statusItens.code1 = true;
+            if (card) {
+                card.classList.add('answered-correct');
+                card.classList.remove('answered-incorrect');
+            }
+        } else {
+            fb.className = 'code-feedback error';
+            let errs = [];
+            if (!hasGetTitulo) errs.push('extrair "titulo" com rs.getString("titulo")');
+            if (!hasGetAutor) errs.push('extrair "autor" com rs.getString("autor")');
+            if (!hasGetPreco) errs.push('extrair "preco" com rs.getDouble("preco")');
+            if (!hasReturn) errs.push('retornar new Livro(...)');
+            fb.innerHTML = '❌ <strong>Ajuste Necessário:</strong> Faltou: ' + errs.join(', ') + '.';
+            fb.style.display = 'block';
+            statusItens.code1 = false;
+            if (card) {
+                card.classList.add('answered-incorrect');
+                card.classList.remove('answered-correct');
+            }
+        }
+        atualizarProgresso();
+    }
+
+    function resetCode1() {
+        document.getElementById('code-mapear').value = `// Complete a implementação do método abaixo:
+private Livro mapearLinha(ResultSet rs) throws SQLException {
+    Long id = rs.getLong("id");
+    // TODO: Extraia titulo (String), autor (String) e preco (double)
+    
+    // TODO: Retorne a instância completa de Livro
+    
+}`;
+        const fb = document.getElementById('feedback-code1');
+        if (fb) {
+            fb.style.display = 'none';
+            fb.className = 'code-feedback';
+            fb.innerHTML = '';
+        }
+        const card = document.getElementById('card-code1');
+        if (card) card.classList.remove('answered-correct', 'answered-incorrect');
+        statusItens.code1 = false;
+        atualizarProgresso();
+    }
+
+    // Validador Desafio 2: salvar
+    function validarSalvar() {
+        const code = document.getElementById('code-salvar').value;
+        const c = stripComments(code);
+        const fb = document.getElementById('feedback-code2');
+        const card = document.getElementById('card-code2');
+
+        const hasSetString1 = /stmt\s*\.\s*setString\s*\(\s*1\s*,/i.test(c);
+        const hasSetString2 = /stmt\s*\.\s*setString\s*\(\s*2\s*,/i.test(c);
+        const hasSetDouble3 = /stmt\s*\.\s*setDouble\s*\(\s*3\s*,/i.test(c);
+        const hasExecUpdate = /stmt\s*\.\s*executeUpdate\s*\(\s*\)/i.test(c);
+        const hasGetKeys = /getGeneratedKeys\s*\(\s*\)/i.test(c);
+        const hasSetId = /livro\s*\.\s*setId\s*\(/i.test(c);
+
+        if (hasSetString1 && hasSetString2 && hasSetDouble3 && hasExecUpdate && hasGetKeys && hasSetId) {
+            fb.className = 'code-feedback success';
+            fb.innerHTML = '✔️ <strong>Código Canônico e Seguro!</strong> PreparedStatement tipado sem risco de SQL Injection e ID gerado sincronizado no objeto da memória.';
+            fb.style.display = 'block';
+            statusItens.code2 = true;
+            if (card) {
+                card.classList.add('answered-correct');
+                card.classList.remove('answered-incorrect');
+            }
+        } else {
+            fb.className = 'code-feedback error';
+            let errs = [];
+            if (!hasSetString1 || !hasSetString2 || !hasSetDouble3) errs.push('configurar os 3 parâmetros no stmt (índices 1, 2 e 3)');
+            if (!hasExecUpdate) errs.push('executar stmt.executeUpdate()');
+            if (!hasGetKeys || !hasSetId) errs.push('recuperar chaves geradas e chamar livro.setId(...)');
+            fb.innerHTML = '❌ <strong>Falha na Validação:</strong> Faltou: ' + errs.join(', ') + '.';
+            fb.style.display = 'block';
+            statusItens.code2 = false;
+            if (card) {
+                card.classList.add('answered-incorrect');
+                card.classList.remove('answered-correct');
+            }
+        }
+        atualizarProgresso();
+    }
+
+    function resetCode2() {
+        document.getElementById('code-salvar').value = `@Override
+public void salvar(Livro livro) {
+    String sql = "INSERT INTO livros (titulo, autor, preco) VALUES (?, ?, ?);";
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        
+        // TODO: Configure os 3 parâmetros tipados (setString, setDouble)
+        
+        // TODO: Execute a atualização no banco (executeUpdate)
+        
+        // TODO: Capture a chave gerada com stmt.getGeneratedKeys() e faça livro.setId(...)
+        
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao salvar livro: " + e.getMessage(), e);
+    }
+}`;
+        const fb = document.getElementById('feedback-code2');
+        if (fb) {
+            fb.style.display = 'none';
+            fb.className = 'code-feedback';
+            fb.innerHTML = '';
+        }
+        const card = document.getElementById('card-code2');
+        if (card) card.classList.remove('answered-correct', 'answered-incorrect');
+        statusItens.code2 = false;
+        atualizarProgresso();
+    }
+
+    // Validador Desafio 3: buscarPorId
+    function validarBuscar() {
+        const code = document.getElementById('code-buscar').value;
+        const c = stripComments(code);
+        const fb = document.getElementById('feedback-code3');
+        const card = document.getElementById('card-code3');
+
+        const hasNext = /rs\s*\.\s*next\s*\(\s*\)/i.test(c);
+        const hasOptOf = /Optional\s*\.\s*of\s*\(/i.test(c);
+        const hasOptEmpty = /Optional\s*\.\s*empty\s*\(\s*\)/i.test(c);
+
+        if (hasNext && hasOptOf && hasOptEmpty) {
+            fb.className = 'code-feedback success';
+            fb.innerHTML = '✔️ <strong>Padrão de Ouro Aprovado!</strong> Reutilização elegante do método mapearLinha e tratamento blindado contra NullPointerException com Optional.';
+            fb.style.display = 'block';
+            statusItens.code3 = true;
+            if (card) {
+                card.classList.add('answered-correct');
+                card.classList.remove('answered-incorrect');
+            }
+        } else {
+            fb.className = 'code-feedback error';
+            let errs = [];
+            if (!hasNext) errs.push('testar se o registro existe com if (rs.next())');
+            if (!hasOptOf) errs.push('retornar Optional.of(mapearLinha(rs))');
+            if (!hasOptEmpty) errs.push('retornar Optional.empty() quando não encontrar');
+            fb.innerHTML = '❌ <strong>Atenção ao Padrão:</strong> ' + errs.join(', ') + '.';
+            fb.style.display = 'block';
+            statusItens.code3 = false;
+            if (card) {
+                card.classList.add('answered-incorrect');
+                card.classList.remove('answered-correct');
+            }
+        }
+        atualizarProgresso();
+    }
+
+    function resetCode3() {
+        document.getElementById('code-buscar').value = `@Override
+public Optional<Livro> buscarPorId(Long id) {
+    String sql = "SELECT id, titulo, autor, preco FROM livros WHERE id = ?;";
+    try (Connection conn = ConexaoFactory.obterConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setLong(1, id);
+        try (ResultSet rs = stmt.executeQuery()) {
+            // [ESCREVA SUA LÓGICA AQUI]:
+            // Se houver registro, retorne o Livro encapsulado na caixinha Optional
+            // Se o SELECT não encontrou nada, retorne a caixinha vazia
+            
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao consultar livro por ID: " + e.getMessage(), e);
+    }
+}`;
+        const fb = document.getElementById('feedback-code3');
+        if (fb) {
+            fb.style.display = 'none';
+            fb.className = 'code-feedback';
+            fb.innerHTML = '';
+        }
+        const card = document.getElementById('card-code3');
+        if (card) card.classList.remove('answered-correct', 'answered-incorrect');
+        statusItens.code3 = false;
+        atualizarProgresso();
+    }
+
+    // Descriptografar Gabarito Oficial da Lista (AES-GCM WebCrypto)
+    async function unlockVault() {
+        const input = document.getElementById('pass-input');
+        const decContainer = document.getElementById('decrypted-container');
+        const payloadDiv = document.getElementById('encrypted-payload');
+        const password = input.value.trim().toLowerCase();
+
+        if (!password) {
+            showVaultMsg('Por favor, digite a chave de descriptografia!', 'error');
+            return;
+        }
+
+        try {
+            const encoder = new TextEncoder();
+            const pwUtf8 = encoder.encode(password);
+            const keyHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+
+            const cryptoKey = await crypto.subtle.importKey(
+                'raw',
+                keyHash,
+                { name: 'AES-GCM' },
+                false,
+                ['decrypt']
+            );
+
+            const ivB64 = payloadDiv.getAttribute('data-iv');
+            const ctB64 = payloadDiv.getAttribute('data-ct');
+
+            const ivStr = atob(ivB64);
+            const iv = new Uint8Array(ivStr.length);
+            for (let i = 0; i < ivStr.length; i++) iv[i] = ivStr.charCodeAt(i);
+
+            const ctStr = atob(ctB64);
+            const ct = new Uint8Array(ctStr.length);
+            for (let i = 0; i < ctStr.length; i++) ct[i] = ctStr.charCodeAt(i);
+
+            const decryptedBuffer = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv },
+                cryptoKey,
+                ct
+            );
+
+            const decryptedText = new TextDecoder('utf-8').decode(decryptedBuffer);
+
+            showVaultMsg('🎉 Chave Correta! Gabarito Oficial e Código Completo da Lista Desbloqueados!', 'success');
+            renderMarkdown(decryptedText, decContainer);
+            decContainer.style.display = 'block';
+            decContainer.scrollIntoView({ behavior: 'smooth' });
+
+        } catch (err) {
+            showVaultMsg('❌ Chave Incorreta! A chave criptográfica não confere com o hash AES-GCM. Tente novamente!', 'error');
+            decContainer.style.display = 'none';
+        }
+    }
+
+    function showVaultMsg(text, type) {
+        const msg = document.getElementById('vault-msg');
+        if (msg) {
+            msg.className = `vault-msg ${type}`;
+            msg.innerText = text;
+            msg.style.display = 'block';
+        }
+    }
+
+    function renderMarkdown(md, targetEl) {
+        let html = md
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        html = html.replace(/^### (.*$)/gim, '<h3 style="color:var(--secondary); margin-top:20px;">$1</h3>');
+        html = html.replace(/^## (.*$)/gim, '<h2 style="color:var(--primary); margin-top:24px;">$1</h2>');
+        html = html.replace(/^# (.*$)/gim, '<h1 style="color:var(--primary); border-bottom:2px solid var(--border); padding-bottom:8px;">$1</h1>');
+        html = html.replace(/^---/gim, '<hr style="border:0; border-top:1px solid #cbd5e1; margin:20px 0;">');
+        html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+        
+        // Blocos de código Java
+        html = html.replace(/```java([\s\S]*?)```/gim, '<pre><code class="language-java">$1</code></pre>');
+        html = html.replace(/`([^`]+)`/gim, '<code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-family:monospace; color:#0f172a;">$1</code>');
+        html = html.replace(/^\* (.*$)/gim, '<li>$1</li>');
+        html = html.replace(/<\/li>\s*<li>/gim, '</li><li>');
+        html = html.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
+        html = html.replace(/\n\n+/gim, '</p><p>');
+
+        targetEl.innerHTML = `<p>${html}</p>`;
+        if (window.Prism) {
+            Prism.highlightAllUnder(targetEl);
+        }
+    }
+
+</script>
+
+</body>
+</html>
